@@ -18,17 +18,12 @@ import {
   listarUsuarios, listarPendentes, aprovarUsuario, revogarUsuario, vincularProfessor,
 } from "./auth.js";
 
-import { tourAdmin, resetarTour } from "./tour.js";
-
 // Protege a página: só coordenador entra. Bloqueia o render até validar sessão.
 const { perfil: perfilAdmin } = await protegerPagina(["coordenador"]);
 const elOla = document.querySelector("#ola-coordenador");
 if (elOla) elOla.textContent = perfilAdmin.nome || perfilAdmin.email;
 const btnSair = document.querySelector("#btn-sair");
 if (btnSair) btnSair.addEventListener("click", async () => { await sair(); location.href = "index.html"; });
-
-// Inicia o tour na primeira visita
-setTimeout(() => tourAdmin(), 800);
 
 // ---------- utilidades de UI ----------
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
@@ -60,11 +55,12 @@ if (CONFIG_PENDENTE) {
 
 // ---------- Navegação por abas ----------
 $$(".aba").forEach((aba) => {
-  aba.addEventListener("click", () => {
+  aba.addEventListener("click", async () => {
     $$(".aba").forEach((a) => a.setAttribute("aria-selected", "false"));
     $$(".painel").forEach((p) => (p.hidden = true));
     aba.setAttribute("aria-selected", "true");
-    $("#" + aba.dataset.painel).hidden = false;
+    const painel = $("#" + aba.dataset.painel);
+    if (painel) painel.hidden = false;
     if (aba.dataset.painel === "painel-alunos") renderAlunos();
     if (aba.dataset.painel === "painel-professores") renderProfessores();
     if (aba.dataset.painel === "painel-turmas") { renderTurmas(); preencherSelectsTurma(); }
@@ -72,7 +68,6 @@ $$(".aba").forEach((aba) => {
     if (aba.dataset.painel === "painel-importar") preencherSelectTurmaImport();
     if (aba.dataset.painel === "painel-usuarios") renderUsuarios();
     if (aba.dataset.painel === "painel-avaliacoes") {
-      // importa módulo de avaliações só quando necessário (lazy)
       const { renderListaAvaliacoes } = await import("./app-avaliacoes-admin.js");
       renderListaAvaliacoes();
     }
@@ -447,13 +442,3 @@ async function renderUsuarios() {
 
 // carga inicial: mostra alunos
 renderAlunos();
-
-// Botão "Ver tour novamente"
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.createElement("button");
-  btn.className = "btn btn-secundario";
-  btn.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
-  btn.textContent = "Ver tour";
-  btn.addEventListener("click", () => { resetarTour("tour-admin-v1"); tourAdmin(true); });
-  document.querySelector(".topo .barra")?.appendChild(btn);
-});
