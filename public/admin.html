@@ -90,7 +90,11 @@
               <input id="tu-codigo" placeholder="Deixe vazio para usar o prefixo" style="text-transform:uppercase" />
             </div>
             <div><label for="tu-nome">Nome da turma *</label><input id="tu-nome" required placeholder="Ex.: Hebraico I" /></div>
-            <div><label for="tu-professor">Professor</label><select id="tu-professor"></select></div>
+            <div>
+              <label for="tu-professores">Professores (pode selecionar mais de um)</label>
+              <select id="tu-professores" multiple style="height:90px"></select>
+              <p class="dica">Segure Ctrl (Windows) ou ⌘ (Mac) para selecionar múltiplos.</p>
+            </div>
             <div>
               <label for="tu-dia-semana">Dia da semana *</label>
               <select id="tu-dia-semana" required>
