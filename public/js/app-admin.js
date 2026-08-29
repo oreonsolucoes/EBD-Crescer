@@ -284,8 +284,9 @@ let previewAtual = []; // guarda a saída de preVisualizar entre etapas
 
 async function preencherSelectTurmaImport() {
   const sel = $("#imp-turma");
+  if (!sel) return;
   const turmas = await listarTurmas().catch(() => []);
-  sel.innerHTML = '<option value="">— não matricular agora —</option>' +
+  sel.innerHTML = '<option value="">— sem matrícula automática —</option>' +
     turmas.map((t) => `<option value="${esc(t.codigo)}">${esc(t.codigo)} · ${esc(t.nome)}</option>`).join("");
 }
 
@@ -306,6 +307,8 @@ inputArquivo.addEventListener("change", () => {
 
 async function processarArquivo(file) {
   $("#imp-status").textContent = `Lendo "${file.name}"…`;
+  // Já preenche as turmas enquanto lê o arquivo
+  preencherSelectTurmaImport();
   try {
     const linhas = await lerArquivo(file);
     if (!linhas.length) { $("#imp-status").textContent = "Arquivo sem linhas de dados."; return; }
