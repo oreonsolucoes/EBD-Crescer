@@ -16,12 +16,12 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "COLE_SUA_API_KEY",
-  authDomain: "SEU_PROJETO.firebaseapp.com",
-  projectId: "SEU_PROJETO",
-  storageBucket: "SEU_PROJETO.appspot.com",
-  messagingSenderId: "COLE_SEU_SENDER_ID",
-  appId: "COLE_SEU_APP_ID",
+  apiKey: "AIzaSyB8bpxn2y_pYhEultUsQ13hF0CYlF0hqhE",
+  authDomain: "ebd-crescer.firebaseapp.com",
+  projectId: "ebd-crescer",
+  storageBucket: "ebd-crescer.firebasestorage.app",
+  messagingSenderId: "194214738160",
+  appId: "1:194214738160:web:fe936f594fb1665a3e6a35",
 };
 
 export const app = initializeApp(firebaseConfig);
