@@ -2,1001 +2,788 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Guia do Sistema CRESCER · EBD IBC</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
 <style>
-:root {
-  --azul:   #1C2230;
-  --azul2:  #2B3A67;
-  --ambar:  #C6862B;
-  --ambar2: #F0A73A;
-  --verde:  #2E7D5B;
-  --papel:  #F7F4EE;
-  --papel2: #EDE9E0;
-  --cinza:  #566072;
-  --linha:  #DDD8CC;
-  --branco: #FFFFFF;
-  --erro:   #B5341F;
-  --r: 12px;
+/* ── RESET TOTAL ────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
 }
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; overflow-x: hidden; }
+html, body {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+:root {
+  --azul:  #1C2230;
+  --azul2: #2B3A67;
+  --ambar: #C6862B;
+  --ambr2: #F0A73A;
+  --verde: #2E7D5B;
+  --papel: #F7F4EE;
+  --pap2:  #EDE9E0;
+  --cinza: #566072;
+  --linha: #DDD8CC;
+  --erro:  #B5341F;
+  --r: 10px;
+}
+
 body {
   font-family: 'Inter', sans-serif;
   background: var(--papel);
   color: var(--azul);
   line-height: 1.6;
-  overflow-x: hidden;
-  width: 100%;
 }
 
 /* ── HEADER ─────────────────────────────────────────────── */
-.site-header {
+.header {
   background: var(--azul);
   border-bottom: 4px solid var(--ambar);
   position: sticky; top: 0; z-index: 100;
-  width: 100%; overflow: hidden;
+  width: 100%;
 }
-.site-header .inner {
-  max-width: 960px; margin: 0 auto;
-  padding: 10px 14px;
-  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+.header-inner {
+  padding: 12px 16px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
-.site-header .logo-text {
-  font-size: 1.3rem; font-weight: 800;
-  color: #fff; letter-spacing: -.01em;
-}
-.site-header .logo-sub {
-  font-size: .78rem; color: var(--ambar); font-weight: 500;
-}
-.site-header .badge {
+.logo-nome { font-size: 1.1rem; font-weight: 800; color: #fff; }
+.logo-sub  { font-size: .72rem; color: var(--ambar); }
+.badge-guia {
   background: var(--ambar); color: var(--azul);
   font-size: .7rem; font-weight: 700;
-  padding: 2px 8px; border-radius: 99px;
-  margin-left: auto;
+  padding: 4px 10px; border-radius: 99px;
+  white-space: nowrap; flex-shrink: 0;
 }
 
-/* ── NAV LATERAL ─────────────────────────────────────────── */
-.layout {
-  max-width: 960px; margin: 0 auto;
-  display: grid; grid-template-columns: 220px 1fr;
-  gap: 0; min-height: 100vh; width: 100%;
-}
-@media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
-
-.sidenav {
-  padding: 24px 16px;
-  border-right: 1px solid var(--linha);
-  position: sticky; top: 57px;
-  height: calc(100vh - 57px);
-  overflow-y: auto;
-}
-@media (max-width: 700px) { .sidenav { display: none; } }
-
-.sidenav .nav-section { margin-bottom: 4px; }
-.sidenav .nav-title {
-  font-size: .68rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .08em; color: var(--cinza); padding: 8px 8px 4px;
-}
-.sidenav a {
-  display: flex; align-items: center; gap: 8px;
-  padding: 7px 8px; border-radius: 8px;
-  font-size: .85rem; color: var(--azul); text-decoration: none;
-  transition: background .15s;
-}
-.sidenav a:hover { background: var(--papel2); }
-.sidenav a.active { background: var(--ambar); color: var(--azul); font-weight: 600; }
-.sidenav .nav-icon { font-size: 1rem; width: 22px; text-align: center; }
-
-/* ── CONTEÚDO ────────────────────────────────────────────── */
-.content { padding: 16px 14px; }
-@media (min-width: 700px) { .content { padding: 28px 24px; } }
-
-/* Seções */
-.section { margin-bottom: 56px; scroll-margin-top: 80px; }
-
-.section-badge {
-  display: inline-flex; align-items: center; gap: 8px;
-  background: var(--ambar); color: var(--azul);
-  font-size: .72rem; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .07em; padding: 3px 10px; border-radius: 99px;
-  margin-bottom: 8px;
-}
-h2.section-title {
-  font-size: 1.6rem; font-weight: 800; color: var(--azul);
-  margin-bottom: 6px; letter-spacing: -.02em;
-}
-.section-desc {
-  font-size: 1rem; color: var(--cinza); margin-bottom: 24px;
-  max-width: 600px;
+/* ── WRAPPER ─────────────────────────────────────────────── */
+.wrap {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 0 16px;
 }
 
 /* ── HERO ────────────────────────────────────────────────── */
 .hero {
-  background: linear-gradient(135deg, var(--azul) 0%, var(--azul2) 100%);
-  border-radius: var(--r); padding: 28px 20px; margin-bottom: 40px;
-  color: #fff; position: relative; overflow: hidden;
-  width: 100%; box-sizing: border-box;
+  background: linear-gradient(150deg, var(--azul) 0%, var(--azul2) 100%);
+  padding: 28px 16px 24px;
+  width: 100%;
 }
-.hero::before {
-  content: ""; position: absolute; inset: 0;
-  background: repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);
-}
-.hero .inner { position: relative; width: 100%; max-width: 100%; }
-.hero .tag {
+.hero-inner { max-width: 680px; margin: 0 auto; }
+.hero-tag {
+  display: inline-block;
   background: var(--ambar); color: var(--azul);
-  font-size: .72rem; font-weight: 700; padding: 3px 10px;
-  border-radius: 99px; display: inline-block; margin-bottom: 12px;
+  font-size: .7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 99px;
+  margin-bottom: 10px;
 }
-.hero h1 { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
-.hero p  { color: rgba(255,255,255,.75); max-width: 520px; margin-bottom: 20px; }
-.hero .url {
-  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+.hero h1 {
+  font-size: 1.7rem; font-weight: 800;
+  color: #fff; margin-bottom: 8px;
+  line-height: 1.2;
+}
+.hero p {
+  font-size: .9rem; color: rgba(255,255,255,.75);
+  margin-bottom: 14px; max-width: 100%;
+}
+.hero-url {
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.2);
   border-radius: 8px; padding: 8px 12px;
-  font-family: 'IBM Plex Mono', monospace; font-size: .78rem;
-  display: block; color: var(--ambar2);
-  word-break: break-all; max-width: 100%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .75rem; color: var(--ambr2);
+  word-break: break-all; width: 100%;
+  display: block; margin-bottom: 16px;
 }
 .perfis {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 10px;
-  margin-top: 16px;
+  display: flex; flex-direction: column; gap: 8px;
+  width: 100%;
 }
-@media (min-width: 560px) { .perfis { grid-template-columns: repeat(3, 1fr); } }
-.perfil-card {
-  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
-  border-radius: 10px; padding: 14px;
+.perfil {
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 8px; padding: 12px 14px;
+  display: flex; align-items: center; gap: 12px;
 }
-.perfil-card .icon { font-size: 1.6rem; margin-bottom: 6px; }
-.perfil-card .nome { font-weight: 700; font-size: .9rem; margin-bottom: 2px; }
-.perfil-card .desc { font-size: .75rem; color: rgba(255,255,255,.6); }
+.perfil .ico { font-size: 1.4rem; flex-shrink: 0; }
+.perfil-nome { font-weight: 700; font-size: .9rem; color: #fff; }
+.perfil-desc { font-size: .75rem; color: rgba(255,255,255,.6); }
 
-/* ── CARDS DE PASSO ──────────────────────────────────────── */
-.passos { display: flex; flex-direction: column; gap: 0; }
-.passo {
-  display: flex; gap: 16px; position: relative; padding-bottom: 24px;
+/* ── ÍNDICE ──────────────────────────────────────────────── */
+.indice {
+  padding: 20px 16px;
+  max-width: 680px; margin: 0 auto;
 }
-.passo:last-child { padding-bottom: 0; }
-.passo-num {
-  flex: none; width: 36px; height: 36px;
+.indice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.indice-item {
+  background: #fff; border: 1px solid var(--linha);
+  border-radius: 8px; padding: 12px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: .82rem; font-weight: 600;
+  color: var(--azul); text-decoration: none;
+}
+.indice-item:active { background: var(--pap2); }
+.indice-item .ii { font-size: 1.1rem; flex-shrink: 0; }
+
+/* ── SEÇÕES ──────────────────────────────────────────────── */
+.section {
+  padding: 28px 16px;
+  max-width: 680px; margin: 0 auto;
+  scroll-margin-top: 70px;
+}
+.section + .section {
+  border-top: 1px solid var(--linha);
+}
+.sec-badge {
+  display: inline-flex; align-items: center; gap: 6px;
   background: var(--ambar); color: var(--azul);
-  border-radius: 50%; display: grid; place-items: center;
-  font-weight: 800; font-size: .9rem; position: relative; z-index: 1;
+  font-size: .68rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em;
+  padding: 3px 10px; border-radius: 99px;
+  margin-bottom: 8px;
 }
+.sec-h2 {
+  font-size: 1.4rem; font-weight: 800;
+  color: var(--azul); margin-bottom: 6px;
+}
+.sec-desc {
+  font-size: .88rem; color: var(--cinza);
+  margin-bottom: 20px;
+}
+
+/* ── PASSOS ──────────────────────────────────────────────── */
+.passos { display: flex; flex-direction: column; gap: 0; }
+.passo  { display: flex; gap: 14px; padding-bottom: 20px; position: relative; }
+.passo:last-child { padding-bottom: 0; }
 .passo::before {
   content: ""; position: absolute;
   left: 17px; top: 36px; bottom: 0; width: 2px;
   background: var(--linha);
 }
 .passo:last-child::before { display: none; }
-.passo-body { flex: 1; padding-top: 4px; }
-.passo-body h4 { font-weight: 700; margin-bottom: 4px; font-size: .95rem; }
-.passo-body p  { font-size: .88rem; color: var(--cinza); }
+.passo-n {
+  flex-shrink: 0; width: 34px; height: 34px;
+  background: var(--ambar); color: var(--azul);
+  border-radius: 50%; display: grid; place-items: center;
+  font-weight: 800; font-size: .85rem; z-index: 1;
+}
+.passo-body h4  { font-weight: 700; margin-bottom: 3px; }
+.passo-body p   { font-size: .85rem; color: var(--cinza); }
+.passo-body strong { color: var(--azul); }
 
-/* ── MOCK DE TELA ────────────────────────────────────────── */
-.mock-frame {
-  background: var(--azul); border-radius: var(--r);
-  overflow: hidden; box-shadow: 0 8px 32px rgba(28,34,48,.18);
-  margin: 20px 0;
+/* ── CALLOUT ─────────────────────────────────────────────── */
+.callout {
+  border-left: 4px solid var(--ambar);
+  background: #FBF3E3; border-radius: 0 8px 8px 0;
+  padding: 12px 14px; margin: 16px 0;
+  font-size: .85rem;
+}
+.callout.verde { border-color: var(--verde); background: #E4F0EA; }
+.callout.azul  { border-color: var(--azul2); background: #E5EAF3; }
+.callout.erro  { border-color: var(--erro); background: #f9e9e9; }
+.callout strong { display: block; margin-bottom: 3px; }
+
+/* ── MOCK TELA ───────────────────────────────────────────── */
+.mock {
+  background: #fff; border: 1px solid var(--linha);
+  border-radius: var(--r); overflow: hidden;
+  margin: 16px 0; width: 100%;
 }
 .mock-bar {
-  background: var(--azul2); padding: 8px 14px;
+  background: var(--azul2); padding: 7px 12px;
   display: flex; align-items: center; gap: 8px;
   border-bottom: 3px solid var(--ambar);
 }
-.mock-bar .dots { display: flex; gap: 5px; }
-.mock-bar .dot {
-  width: 10px; height: 10px; border-radius: 50%;
-  background: rgba(255,255,255,.2);
+.mock-dots { display: flex; gap: 4px; }
+.mock-dot  { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,.25); }
+.mock-url  {
+  background: rgba(255,255,255,.1); border-radius: 4px;
+  padding: 2px 8px; font-size: .65rem; color: rgba(255,255,255,.5);
+  font-family: monospace; flex: 1; overflow: hidden;
+  white-space: nowrap; text-overflow: ellipsis;
 }
-.mock-bar .url-bar {
-  background: rgba(255,255,255,.08); border-radius: 4px;
-  padding: 3px 10px; font-size: .72rem; color: rgba(255,255,255,.5);
-  font-family: monospace; flex: 1;
-}
-.mock-body {
-  background: var(--papel); padding: 16px;
-}
+.mock-body { padding: 14px; overflow-x: auto; }
 
-/* Simulação do cabeçalho do sistema */
-.sim-header {
+/* Cabeçalho simulado */
+.sh {
   background: var(--azul); border-bottom: 3px solid var(--ambar);
-  padding: 10px 16px; display: flex; align-items: center; gap: 10px;
-  border-radius: 6px 6px 0 0; margin: -16px -16px 16px;
+  padding: 8px 12px; display: flex; align-items: center; gap: 8px;
+  margin: -14px -14px 12px; flex-wrap: wrap; gap: 6px;
 }
-.sim-logo {
-  width: 70px; height: 24px; background: #fff;
-  border-radius: 4px; display: grid; place-items: center;
-  font-size: .6rem; font-weight: 700; color: var(--azul); padding: 2px 4px;
+.sh-logo {
+  background: #fff; border-radius: 4px;
+  padding: 2px 6px; font-size: .6rem; font-weight: 700; color: var(--azul);
+  flex-shrink: 0;
 }
-.sim-title { color: #fff; font-size: .8rem; font-weight: 600; }
-.sim-sub   { color: rgba(255,255,255,.6); font-size: .65rem; }
-.sim-btns  { margin-left: auto; display: flex; gap: 6px; }
-.sim-btn-s {
+.sh-title { color: #fff; font-size: .78rem; font-weight: 600; flex: 1; }
+.sh-btns  { display: flex; gap: 4px; }
+.sh-btn   {
   background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.2);
-  border-radius: 4px; padding: 3px 8px; font-size: .62rem; color: #fff;
+  border-radius: 4px; padding: 2px 7px; font-size: .6rem; color: #fff;
+  white-space: nowrap;
 }
 
-/* Simulação de abas */
-.sim-abas {
-  display: flex; gap: 2px; border-bottom: 2px solid var(--linha);
-  margin-bottom: 12px; overflow-x: auto;
+/* Abas simuladas */
+.s-abas {
+  display: flex; gap: 2px; overflow-x: auto;
+  border-bottom: 2px solid var(--linha); margin-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
 }
-.sim-aba {
-  padding: 6px 10px; font-size: .72rem; color: var(--cinza);
-  white-space: nowrap; cursor: pointer;
+.s-aba {
+  padding: 5px 9px; font-size: .68rem; color: var(--cinza);
+  white-space: nowrap; flex-shrink: 0;
 }
-.sim-aba.ativa {
-  color: var(--azul2); border-bottom: 2px solid var(--ambar);
-  font-weight: 700; margin-bottom: -2px;
+.s-aba.on {
+  color: var(--azul2); font-weight: 700;
+  border-bottom: 2px solid var(--ambar); margin-bottom: -2px;
 }
 
-/* Simulação de form */
-.sim-form { display: grid; gap: 8px; }
-.sim-field label { display: block; font-size: .65rem; color: var(--cinza); margin-bottom: 2px; font-weight: 600; }
-.sim-field input {
-  width: 100%; padding: 6px 8px; border: 1px solid var(--linha);
-  border-radius: 6px; font-size: .75rem; background: #fff; color: var(--azul);
+/* Form simulado */
+.s-form { display: flex; flex-direction: column; gap: 8px; }
+.s-lbl  { font-size: .62rem; color: var(--cinza); font-weight: 600; margin-bottom: 2px; display: block; }
+.s-inp  {
+  width: 100%; padding: 6px 8px;
+  border: 1px solid var(--linha); border-radius: 6px;
+  font-size: .75rem; color: var(--azul); background: var(--papel);
 }
-.sim-field.grid2 { display: grid; grid-template-columns: 1fr; gap: 8px; } @media (min-width: 480px) { .sim-field.grid2 { grid-template-columns: 1fr 1fr; } }
-.sim-btn {
-  background: var(--ambar); color: var(--azul);
-  border: none; border-radius: 6px; padding: 8px 14px;
-  font-size: .75rem; font-weight: 700; cursor: pointer; display: inline-block;
+.s-btn  {
+  display: inline-block; background: var(--ambar); color: var(--azul);
+  border-radius: 6px; padding: 7px 12px; font-size: .75rem; font-weight: 700;
 }
-.sim-btn.sec {
+.s-btn.sec {
   background: #fff; border: 1px solid var(--linha); color: var(--azul2);
 }
 
-/* Simulação de lista */
-.sim-lista { border: 1px solid var(--linha); border-radius: 8px; overflow: hidden; }
-.sim-lista .sim-row {
-  display: flex; gap: 12px; padding: 8px 12px;
-  border-bottom: 1px solid var(--linha); align-items: center; font-size: .72rem;
+/* Lista simulada */
+.s-lista { border: 1px solid var(--linha); border-radius: 8px; overflow: hidden; }
+.s-row   {
+  display: flex; align-items: center; gap: 10px;
+  padding: 7px 10px; border-bottom: 1px solid var(--linha);
+  font-size: .72rem;
 }
-.sim-lista .sim-row:last-child { border-bottom: none; }
-.sim-lista .sim-row.header { background: #EEE9DC; font-weight: 700; font-size: .65rem; color: var(--cinza); text-transform: uppercase; }
-.sim-cod { font-family: monospace; font-weight: 700; color: var(--azul2); min-width: 80px; }
-.sim-tag {
-  font-size: .62rem; font-weight: 700; padding: 2px 7px; border-radius: 99px;
-}
-.sim-tag.ok   { background: #E4F0EA; color: var(--verde); }
-.sim-tag.pend { background: #FBF3E3; color: #8B6320; }
-.sim-tag.novo { background: #E5EAF3; color: var(--azul2); }
+.s-row:last-child { border-bottom: none; }
+.s-row.hd { background: #EEE9DC; font-weight: 700; font-size: .63rem; color: var(--cinza); text-transform: uppercase; }
+.s-cod { font-family: monospace; font-weight: 700; color: var(--azul2); flex-shrink: 0; }
+.s-nome { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.s-tag  { font-size: .6rem; font-weight: 700; padding: 2px 6px; border-radius: 99px; flex-shrink: 0; }
+.s-tag.ok   { background: #E4F0EA; color: var(--verde); }
+.s-tag.am   { background: #FBF3E3; color: #8B6320; }
+.s-tag.az   { background: #E5EAF3; color: var(--azul2); }
+.s-tag.err  { background: #f6dede; color: var(--erro); }
 
-/* Simulação de QR */
-.sim-qr {
+/* Toggle presença */
+.tog {
+  padding: 4px 9px; border-radius: 99px; font-size: .62rem; font-weight: 700;
+  border: none; flex-shrink: 0;
+}
+.tog.p { background: var(--ambar); color: var(--azul); }
+.tog.a { background: var(--linha); color: var(--cinza); }
+
+/* QR simulado */
+.s-qr {
   background: #fff; border: 1px solid var(--linha); border-radius: 8px;
   padding: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .qr-box {
-  width: 100px; height: 100px;
-  background: repeating-conic-gradient(#1C2230 0% 25%, #fff 0% 50%) 0 0 / 10px 10px;
-  border-radius: 4px; border: 3px solid var(--azul);
+  width: 90px; height: 90px;
+  background: repeating-conic-gradient(var(--azul) 0% 25%, #fff 0% 50%) 0 0 / 9px 9px;
+  border-radius: 4px;
 }
-.sim-qr .label { font-size: .72rem; color: var(--cinza); text-align: center; }
-.sim-qr .label strong { display: block; color: var(--azul); }
 
-/* Simulação toggle presença */
-.sim-chamada .sim-row .nome { flex: 1; }
-.toggle-btn {
-  padding: 4px 10px; border-radius: 99px; font-size: .65rem; font-weight: 700;
-  border: none; cursor: pointer;
+/* ── CARDS DE FUNCIONALIDADE ─────────────────────────────── */
+.cards {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin: 16px 0;
 }
-.toggle-btn.presente { background: var(--ambar); color: var(--azul); }
-.toggle-btn.ausente  { background: var(--linha); color: var(--cinza); }
-
-/* Simulação de frequência */
-.freq-bar { height: 8px; background: var(--linha); border-radius: 99px; margin: 3px 0; }
-.freq-fill { height: 100%; border-radius: 99px; }
-.freq-fill.alto  { background: var(--verde); }
-.freq-fill.medio { background: var(--ambar); }
-.freq-fill.baixo { background: var(--erro); }
-
-/* ── CALLOUT ─────────────────────────────────────────────── */
-.callout {
-  border-left: 4px solid var(--ambar); background: #FBF3E3;
-  border-radius: 0 8px 8px 0; padding: 12px 16px; margin: 16px 0;
-  font-size: .88rem;
-}
-.callout.verde { border-color: var(--verde); background: #E4F0EA; }
-.callout.azul  { border-color: var(--azul2); background: #E5EAF3; }
-.callout strong { display: block; margin-bottom: 2px; }
-
-/* ── GRID DE CARDS ───────────────────────────────────────── */
-.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 20px 0; }
 .card {
-  background: var(--branco); border: 1px solid var(--linha);
-  border-radius: var(--r); padding: 18px; transition: box-shadow .15s;
+  background: #fff; border: 1px solid var(--linha);
+  border-radius: 8px; padding: 14px;
 }
-.card:hover { box-shadow: 0 4px 16px rgba(28,34,48,.08); }
-.card .icon { font-size: 1.8rem; margin-bottom: 8px; }
-.card h4 { font-size: .95rem; font-weight: 700; margin-bottom: 4px; }
-.card p  { font-size: .8rem; color: var(--cinza); }
+.card .ci { font-size: 1.5rem; margin-bottom: 6px; }
+.card h4  { font-size: .85rem; font-weight: 700; margin-bottom: 3px; }
+.card p   { font-size: .75rem; color: var(--cinza); }
 
 /* ── FLUXO ───────────────────────────────────────────────── */
 .fluxo {
-  display: flex; align-items: center; gap: 0;
-  overflow-x: auto; padding: 16px 0; margin: 16px 0;
+  display: flex; align-items: center;
+  overflow-x: auto; gap: 4px;
+  padding: 12px 0; margin: 12px 0;
+  -webkit-overflow-scrolling: touch;
 }
 .fluxo-item {
-  flex: none; background: var(--branco); border: 1px solid var(--linha);
-  border-radius: 10px; padding: 12px 14px; text-align: center; min-width: 110px;
+  flex-shrink: 0; background: #fff;
+  border: 1px solid var(--linha); border-radius: 8px;
+  padding: 10px 12px; text-align: center;
 }
-.fluxo-item .fi { font-size: 1.6rem; }
-.fluxo-item .ft { font-size: .72rem; font-weight: 600; margin-top: 4px; }
-.fluxo-seta {
-  color: var(--ambar); font-size: 1.2rem; padding: 0 6px; flex: none;
-}
+.fluxo-item .fi { font-size: 1.4rem; }
+.fluxo-item .ft { font-size: .65rem; font-weight: 600; margin-top: 3px; }
+.fluxo-seta { color: var(--ambar); font-size: 1rem; flex-shrink: 0; }
 
 /* ── TABELA ──────────────────────────────────────────────── */
-.tabela-wrap { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--linha); margin: 16px 0; }
-table { width: 100%; border-collapse: collapse; font-size: .85rem; }
-th { background: var(--azul); color: #fff; padding: 9px 12px; text-align: left; font-size: .75rem; font-weight: 600; }
-td { padding: 9px 12px; border-bottom: 1px solid var(--linha); }
+.tabela { overflow-x: auto; margin: 14px 0; border-radius: 8px; border: 1px solid var(--linha); }
+table   { width: 100%; border-collapse: collapse; font-size: .8rem; min-width: 300px; }
+th { background: var(--azul); color: #fff; padding: 8px 10px; text-align: left; font-size: .7rem; }
+td { padding: 8px 10px; border-bottom: 1px solid var(--linha); }
 tr:last-child td { border-bottom: none; }
 tr:nth-child(even) td { background: var(--papel); }
-td code { background: var(--papel2); padding: 1px 6px; border-radius: 4px; font-family: monospace; font-size: .8rem; }
 
-/* ── ÍNDICE RÁPIDO ───────────────────────────────────────── */
-.indice {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 10px; margin: 20px 0;
+/* ── BARRAS DE FREQUÊNCIA ───────────────────────────────── */
+.freq-item { margin-bottom: 14px; }
+.freq-top  { display: flex; justify-content: space-between; font-size: .82rem; margin-bottom: 4px; }
+.freq-bar  { height: 8px; background: var(--linha); border-radius: 99px; }
+.freq-fill { height: 100%; border-radius: 99px; }
+.freq-fill.v { background: var(--verde); }
+.freq-fill.m { background: var(--ambar); }
+.freq-fill.e { background: var(--erro); }
+.freq-sub  { font-size: .68rem; color: var(--cinza); margin-top: 3px; }
+
+/* ── MÉTRICAS DASHBOARD ─────────────────────────────────── */
+.metricas {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px; margin-bottom: 14px;
 }
-.indice a {
-  background: var(--branco); border: 1px solid var(--linha); border-radius: 10px;
-  padding: 14px; text-decoration: none; color: var(--azul);
-  display: flex; align-items: center; gap: 10px; font-size: .85rem; font-weight: 600;
-  transition: border-color .15s, background .15s;
+.metrica {
+  background: var(--papel); border: 1px solid var(--linha);
+  border-radius: 8px; padding: 10px; text-align: center;
 }
-.indice a:hover { border-color: var(--ambar); background: #FBF3E3; }
-.indice a .i { font-size: 1.3rem; }
+.metrica .mn { font-size: 1.3rem; font-weight: 800; font-family: monospace; display: block; }
+.metrica .ml { font-size: .6rem; color: var(--cinza); text-transform: uppercase; letter-spacing: .04em; }
+
+/* ── GRÁFICO DE BARRAS ───────────────────────────────────── */
+.grafico {
+  background: var(--papel); border: 1px solid var(--linha);
+  border-radius: 8px; padding: 12px;
+}
+.grafico-titulo { font-size: .7rem; font-weight: 700; color: var(--cinza); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .04em; }
+.barras { display: flex; align-items: flex-end; gap: 8px; height: 70px; }
+.barra-col { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; }
+.barra-val { font-size: .6rem; font-weight: 700; }
+.barra-fill { width: 100%; border-radius: 4px 4px 0 0; }
+.barra-lbl { font-size: .55rem; color: var(--cinza); text-align: center; }
 
 /* ── RODAPÉ ──────────────────────────────────────────────── */
 footer {
-  border-top: 1px solid var(--linha); margin-top: 40px;
-  padding: 24px 20px; text-align: center;
-  font-size: .78rem; color: var(--cinza);
+  background: var(--azul); color: rgba(255,255,255,.6);
+  text-align: center; padding: 24px 16px;
+  font-size: .78rem; margin-top: 20px;
 }
-
-  /* ── GRIDS RESPONSIVOS ───────────────────────────────────── */
-  .grid-2col {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 16px;
-    margin: 20px 0;
-  }
-  @media (min-width: 560px) {
-    .grid-2col { grid-template-columns: 1fr 1fr; }
-  }
-  .grid-metricas {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 14px;
-  }
-  @media (min-width: 480px) {
-    .grid-metricas { grid-template-columns: repeat(4, 1fr); }
-  }
-  /* fluxo wraps no mobile */
-  .fluxo { flex-wrap: wrap; justify-content: center; }
-  /* sim-row overflow no mobile */
-  .sim-row { flex-wrap: wrap; }
-  /* mock-bar url-bar some no mobile pequeno */
-  @media (max-width: 400px) {
-    .url-bar { display: none; }
-    .sim-btns { display: none; }
-    .hero h1 { font-size: 1.5rem; }
-    .hero { padding: 24px 18px; }
-    .content { padding: 16px 12px; }
-    h2.section-title { font-size: 1.3rem; }
-  }
-
-  /* ── MOCK FRAME MOBILE FIX ───────────────────────────────── */
-  .mock-frame { max-width: 100%; overflow: hidden; }
-  .mock-body  { overflow-x: auto; }
-  .sim-abas   { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-  .sim-lista  { overflow-x: auto; }
-  .sim-row    { min-width: 0; }
-  .sim-cod    { min-width: 0; flex: none; }
-  /* perfil-card sem min-width */
-  .perfil-card { min-width: 0; }
-  /* indice responsivo */
-  .indice { grid-template-columns: repeat(2, 1fr); }
-  @media (min-width: 560px) { .indice { grid-template-columns: repeat(3, 1fr); } }
-  @media (min-width: 760px) { .indice { grid-template-columns: repeat(4, 1fr); } }
-  /* section-desc no mobile */
-  .section-desc { max-width: 100%; }
-
+footer strong { color: var(--ambar); display: block; margin-bottom: 4px; }
 </style>
 </head>
 <body>
 
-<header class="site-header">
-  <div class="inner">
+<!-- HEADER -->
+<header class="header">
+  <div class="header-inner">
     <div>
-      <div class="logo-text">CRESCER</div>
+      <div class="logo-nome">CRESCER</div>
       <div class="logo-sub">Educação Cristã · EBD IBC</div>
     </div>
-    <span class="badge">Guia do Usuário</span>
+    <div class="badge-guia">Guia do Usuário</div>
   </div>
 </header>
 
-<div class="layout">
-  <!-- NAVEGAÇÃO LATERAL -->
-  <nav class="sidenav">
-    <div class="nav-section">
-      <div class="nav-title">Início</div>
-      <a href="#visao-geral"><span class="nav-icon">🏠</span> O sistema</a>
-      <a href="#primeiro-acesso"><span class="nav-icon">🔑</span> Primeiro acesso</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Coordenação</div>
-      <a href="#admin"><span class="nav-icon">⚙️</span> Painel admin</a>
-      <a href="#turmas"><span class="nav-icon">🏫</span> Turmas</a>
-      <a href="#importar"><span class="nav-icon">📥</span> Importar alunos</a>
-      <a href="#usuarios"><span class="nav-icon">👥</span> Usuários</a>
-      <a href="#dashboard"><span class="nav-icon">📊</span> Dashboard</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Professor</div>
-      <a href="#professor"><span class="nav-icon">📋</span> Chamada</a>
-      <a href="#qrcode"><span class="nav-icon">📲</span> QR Code</a>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Aluno</div>
-      <a href="#matricula"><span class="nav-icon">✍️</span> Matrícula</a>
-      <a href="#frequencia"><span class="nav-icon">📈</span> Frequência</a>
-    </div>
-  </nav>
-
-  <!-- CONTEÚDO PRINCIPAL -->
-  <main class="content">
-
-    <!-- HERO -->
-    <div class="hero">
-      <div class="inner">
-        <div class="tag">📖 Sistema Digital da EBD</div>
-        <h1>Sistema CRESCER</h1>
-        <p>Gerencie turmas, presenças e alunos da Escola Bíblica Dominical direto pelo celular — sem papel, sem instalação.</p>
-        <div class="url">oreonsolucoes.github.io/EBD-Crescer/</div>
-        <div class="perfis">
-          <div class="perfil-card">
-            <div class="icon">🎓</div>
-            <div class="nome">Coordenador</div>
-            <div class="desc">Gerencia tudo: alunos, turmas, aprovações e relatórios</div>
-          </div>
-          <div class="perfil-card">
-            <div class="icon">👨‍🏫</div>
-            <div class="nome">Professor</div>
-            <div class="desc">Abre a chamada e marca presença pelo celular</div>
-          </div>
-          <div class="perfil-card">
-            <div class="icon">📱</div>
-            <div class="nome">Aluno</div>
-            <div class="desc">Lê o QR Code para se matricular. Sem conta, sem senha.</div>
-          </div>
-        </div>
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-tag">📖 Sistema Digital da EBD</div>
+    <h1>Sistema CRESCER</h1>
+    <p>Gerencie turmas, presenças e alunos da Escola Bíblica Dominical direto pelo celular — sem papel, sem instalação.</p>
+    <div class="hero-url">oreonsolucoes.github.io/EBD-Crescer/</div>
+    <div class="perfis">
+      <div class="perfil">
+        <div class="ico">🎓</div>
+        <div><div class="perfil-nome">Coordenador</div><div class="perfil-desc">Gerencia tudo: alunos, turmas, aprovações e relatórios</div></div>
+      </div>
+      <div class="perfil">
+        <div class="ico">👨‍🏫</div>
+        <div><div class="perfil-nome">Professor</div><div class="perfil-desc">Abre a chamada e marca presença pelo celular</div></div>
+      </div>
+      <div class="perfil">
+        <div class="ico">📱</div>
+        <div><div class="perfil-nome">Aluno</div><div class="perfil-desc">Lê o QR Code para se matricular. Sem conta, sem senha.</div></div>
       </div>
     </div>
-
-    <!-- ÍNDICE RÁPIDO -->
-    <div class="indice">
-      <a href="#primeiro-acesso"><span class="i">🔑</span> Criar conta</a>
-      <a href="#turmas"><span class="i">🏫</span> Criar turma</a>
-      <a href="#importar"><span class="i">📥</span> Importar alunos</a>
-      <a href="#qrcode"><span class="i">📲</span> QR Code</a>
-      <a href="#professor"><span class="i">✅</span> Fazer chamada</a>
-      <a href="#matricula"><span class="i">✍️</span> Matrícula</a>
-      <a href="#frequencia"><span class="i">📈</span> Frequência</a>
-      <a href="#dashboard"><span class="i">📊</span> Dashboard</a>
-    </div>
-
-    <!-- ── PRIMEIRO ACESSO ─────────────────────────────── -->
-    <section class="section" id="primeiro-acesso">
-      <div class="section-badge">🔑 Primeiros Passos</div>
-      <h2 class="section-title">Como criar sua conta</h2>
-      <p class="section-desc">O primeiro cadastro no sistema vira Coordenador automaticamente. Os professores criam conta e aguardam sua aprovação.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <div class="url-bar">oreonsolucoes.github.io/EBD-Crescer/</div>
-        </div>
-        <div class="mock-body">
-          <div class="sim-header">
-            <div class="sim-logo">CRESCER</div>
-            <div><div class="sim-title">Escola Bíblica Dominical</div><div class="sim-sub">Igreja Batista da Cidade</div></div>
-          </div>
-          <div class="sim-abas">
-            <div class="sim-aba">Entrar</div>
-            <div class="sim-aba ativa">Criar conta</div>
-          </div>
-          <div class="sim-form">
-            <div class="sim-field"><label>Nome completo</label><input value="Adalto Silva" readonly></div>
-            <div class="sim-field"><label>E-mail</label><input value="adalto@ibc.com.br" readonly></div>
-            <div class="sim-field"><label>Senha (mín. 6 caracteres)</label><input value="••••••••" type="password" readonly></div>
-            <div><div class="sim-btn">Criar conta</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="passos">
-        <div class="passo">
-          <div class="passo-num">1</div>
-          <div class="passo-body">
-            <h4>Acesse o site</h4>
-            <p>Abra o navegador e acesse: <strong>oreonsolucoes.github.io/EBD-Crescer/</strong></p>
-          </div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">2</div>
-          <div class="passo-body">
-            <h4>Clique em "Criar conta"</h4>
-            <p>Preencha seu nome completo, e-mail e uma senha com pelo menos 6 caracteres.</p>
-          </div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">3</div>
-          <div class="passo-body">
-            <h4>Você já é o Coordenador!</h4>
-            <p>O primeiro usuário vira Coordenador automaticamente e entra direto no painel de gestão.</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout azul">
-        <strong>👨‍🏫 E os professores?</strong>
-        O professor cria a conta no site → aparece como "Pendente" → você aprova na aba <strong>Usuários</strong> e define o papel. Só depois ele consegue entrar.
-      </div>
-    </section>
-
-    <!-- ── PAINEL ADMIN ────────────────────────────────── -->
-    <section class="section" id="admin">
-      <div class="section-badge">⚙️ Coordenação</div>
-      <h2 class="section-title">Painel da Coordenação</h2>
-      <p class="section-desc">Organizado em abas. Clique em cada aba para acessar a funcionalidade.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar">
-          <div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
-          <div class="url-bar">…/admin.html</div>
-        </div>
-        <div class="mock-body">
-          <div class="sim-header">
-            <div class="sim-logo">CRESCER</div>
-            <div><div class="sim-title">Coordenação</div><div class="sim-sub">Adalto Silva</div></div>
-            <div class="sim-btns">
-              <div class="sim-btn-s">❓ Tour</div>
-              <div class="sim-btn-s">📊 Dashboard</div>
-              <div class="sim-btn-s">Sair</div>
-            </div>
-          </div>
-          <div class="sim-abas">
-            <div class="sim-aba ativa">Alunos</div>
-            <div class="sim-aba">Professores</div>
-            <div class="sim-aba">Turmas</div>
-            <div class="sim-aba">Matrículas</div>
-            <div class="sim-aba">Importar</div>
-            <div class="sim-aba">Usuários</div>
-            <div class="sim-aba">Avaliações</div>
-          </div>
-          <div class="sim-lista">
-            <div class="sim-row header"><span class="sim-cod">Código</span><span style="flex:1">Nome</span><span>Status</span></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0001</span><span style="flex:1">Agatha Costa</span><span class="sim-tag ok">ativo</span></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0002</span><span style="flex:1">Rafael Xavier</span><span class="sim-tag ok">ativo</span></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0003</span><span style="flex:1">Ana Beatriz</span><span class="sim-tag ok">ativo</span></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="cards">
-        <div class="card"><div class="icon">👤</div><h4>Alunos</h4><p>Cadastro individual com código EBD-XXXX gerado automaticamente.</p></div>
-        <div class="card"><div class="icon">👨‍🏫</div><h4>Professores</h4><p>Cadastre os professores antes de criar as turmas.</p></div>
-        <div class="card"><div class="icon">🏫</div><h4>Turmas</h4><p>Crie turmas com prefixo (HEB, GRE, DOC...) e o número é sequencial automático.</p></div>
-        <div class="card"><div class="icon">📋</div><h4>Matrículas</h4><p>Vincule um aluno a uma turma manualmente.</p></div>
-        <div class="card"><div class="icon">📥</div><h4>Importar</h4><p>Importe uma lista CSV ou XLSX de uma vez.</p></div>
-        <div class="card"><div class="icon">🔐</div><h4>Usuários</h4><p>Aprove contas e defina papéis de professores.</p></div>
-      </div>
-    </section>
-
-    <!-- ── TURMAS ──────────────────────────────────────── -->
-    <section class="section" id="turmas">
-      <div class="section-badge">🏫 Turmas</div>
-      <h2 class="section-title">Criando turmas com código automático</h2>
-      <p class="section-desc">Digite o prefixo da matéria e o sistema sugere o próximo número disponível.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/admin.html → aba Turmas</div></div>
-        <div class="mock-body">
-          <div class="sim-form">
-            <div class="sim-field grid2">
-              <div>
-                <label>Prefixo da matéria *</label>
-                <input value="HEB" readonly>
-                <div style="font-size:.65rem;color:var(--verde);margin-top:2px;font-weight:700">✓ Código gerado: HEB-002</div>
-              </div>
-              <div><label>Ou código manual (opcional)</label><input placeholder="Deixe vazio" readonly></div>
-            </div>
-            <div class="sim-field"><label>Nome da turma *</label><input value="Hebraico II" readonly></div>
-            <div class="sim-field grid2">
-              <div><label>Professor</label><input value="Pr. Daniel Alves" readonly></div>
-              <div><label>Dia</label><input value="Domingo" readonly></div>
-            </div>
-            <div><div class="sim-btn">Criar turma</div></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tabela-wrap">
-        <table>
-          <tr><th>Prefixo</th><th>Matéria</th><th>Exemplo de código</th></tr>
-          <tr><td><code>HEB</code></td><td>Hebraico</td><td>HEB-001, HEB-002…</td></tr>
-          <tr><td><code>GRE</code></td><td>Grego</td><td>GRE-001, GRE-002…</td></tr>
-          <tr><td><code>DOC</code></td><td>Doutrina</td><td>DOC-001, DOC-002…</td></tr>
-          <tr><td><code>EC</code></td><td>Educação Cristã</td><td>EC-001, EC-002…</td></tr>
-          <tr><td><code>INF</code></td><td>Infantil</td><td>INF-001, INF-002…</td></tr>
-        </table>
-      </div>
-    </section>
-
-    <!-- ── IMPORTAR ────────────────────────────────────── -->
-    <section class="section" id="importar">
-      <div class="section-badge">📥 Importação</div>
-      <h2 class="section-title">Importar lista de alunos</h2>
-      <p class="section-desc">Aceita CSV e XLSX. Funciona com o formato da Sympla e com a planilha padrão do sistema.</p>
-
-      <div class="fluxo">
-        <div class="fluxo-item"><div class="fi">📄</div><div class="ft">Arrasta o arquivo</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">🔍</div><div class="ft">Sistema analisa</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">👁️</div><div class="ft">Pré-visualização</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">✅</div><div class="ft">Confirmar e gravar</div></div>
-      </div>
-
-      <div class="tabela-wrap">
-        <table>
-          <tr><th>Status na pré-visualização</th><th>Significado</th><th>O que acontece</th></tr>
-          <tr><td><span class="sim-tag ok">Novo</span></td><td>Aluno não existe no banco</td><td>Cria o cadastro EBD-XXXX</td></tr>
-          <tr><td><span class="sim-tag novo">Já cadastrado</span></td><td>CPF ou e-mail já existe</td><td>Só cria a matrícula na turma</td></tr>
-          <tr><td><span class="sim-tag pend">Possível duplicidade</span></td><td>Telefone coincide</td><td>Você decide: marque "confirmar"</td></tr>
-          <tr><td><span style="font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:99px;background:#f6dede;color:var(--erro)">Erro</span></td><td>Nome vazio ou e-mail inválido</td><td>Não é gravado</td></tr>
-        </table>
-      </div>
-
-      <div class="callout">
-        <strong>💡 Dica Sympla</strong>
-        O sistema reconhece automaticamente o formato exportado pela Sympla. Basta baixar o arquivo de ingressos e arrastar direto — sem precisar ajustar as colunas.
-      </div>
-    </section>
-
-    <!-- ── USUÁRIOS ────────────────────────────────────── -->
-    <section class="section" id="usuarios">
-      <div class="section-badge">👥 Usuários</div>
-      <h2 class="section-title">Aprovando professores</h2>
-      <p class="section-desc">Quando um professor cria conta no site, ele aparece aqui como "Pendente". Você aprova e define o papel.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/admin.html → aba Usuários</div></div>
-        <div class="mock-body">
-          <div style="font-size:.75rem;font-weight:700;margin-bottom:8px;color:var(--cinza)">AGUARDANDO APROVAÇÃO</div>
-          <div class="sim-lista">
-            <div class="sim-row header"><span style="flex:1">Nome</span><span style="flex:1">E-mail</span><span style="flex:1">Papel</span><span></span></div>
-            <div class="sim-row">
-              <span style="flex:1">Daniel Alves</span>
-              <span style="font-size:.65rem">daniel@ibc.com</span>
-              <span style="flex:1">
-                <select style="font-size:.65rem;padding:2px 4px;border:1px solid var(--linha);border-radius:4px">
-                  <option>Professor</option>
-                  <option>Coordenador</option>
-                </select>
-              </span>
-              <span><div class="sim-btn" style="padding:4px 10px;font-size:.65rem">Aprovar</div></span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="passos">
-        <div class="passo">
-          <div class="passo-num">1</div>
-          <div class="passo-body"><h4>Professor cria a conta no site</h4><p>Ele acessa o site → Criar conta → preenche os dados.</p></div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">2</div>
-          <div class="passo-body"><h4>Você aprova na aba Usuários</h4><p>Selecione o papel <strong>Professor</strong>, vincule ao cadastro do professor se quiser filtrar turmas, e clique em <strong>Aprovar</strong>.</p></div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">3</div>
-          <div class="passo-body"><h4>Professor faz login</h4><p>A partir daí ele consegue entrar e usar o painel de chamada.</p></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── QR CODE ─────────────────────────────────────── -->
-    <section class="section" id="qrcode">
-      <div class="section-badge">📲 QR Code</div>
-      <h2 class="section-title">O QR Code de cada turma</h2>
-      <p class="section-desc">Cada turma tem um QR Code fixo — o mesmo para todas as aulas. Imprima uma vez e cole na parede da sala.</p>
-
-      <div class="grid-2col">
-        <div class="mock-frame">
-          <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/professor.html</div></div>
-          <div class="mock-body">
-            <div class="sim-qr">
-              <div class="qr-box"></div>
-              <div class="label"><strong>QR Code — HEB-001</strong>Hebraico I</div>
-              <div class="sim-btn" style="font-size:.65rem;padding:6px 10px">⬇️ Baixar QR da turma</div>
-            </div>
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:10px;justify-content:center">
-          <div class="callout verde">
-            <strong>✓ QR fixo = uma vez só</strong>
-            Imprima, plastifique e cole na entrada da sala. Não muda nunca.
-          </div>
-          <div class="callout azul">
-            <strong>ℹ Como o aluno usa</strong>
-            Aponta a câmera → digita o CPF → matriculado! Nas aulas seguintes não precisa mais ler o QR.
-          </div>
-        </div>
-      </div>
-
-      <div class="fluxo">
-        <div class="fluxo-item"><div class="fi">📱</div><div class="ft">Aluno lê o QR</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">🔢</div><div class="ft">Digita o CPF</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">✅</div><div class="ft">Matriculado!</div></div>
-        <div class="fluxo-seta">→</div>
-        <div class="fluxo-item"><div class="fi">📋</div><div class="ft">Aparece na chamada</div></div>
-      </div>
-    </section>
-
-    <!-- ── PROFESSOR / CHAMADA ─────────────────────────── -->
-    <section class="section" id="professor">
-      <div class="section-badge">✅ Professor</div>
-      <h2 class="section-title">Fazendo a chamada</h2>
-      <p class="section-desc">O professor marca quem está presente. Todos começam como ausentes. Um toque por aluno.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/professor.html</div></div>
-        <div class="mock-body">
-          <div class="sim-header">
-            <div class="sim-logo">CRESCER</div>
-            <div><div class="sim-title">Painel do Professor</div><div class="sim-sub">Daniel Alves</div></div>
-            <div class="sim-btns"><div class="sim-btn-s">❓ Tour</div><div class="sim-btn-s">Sair</div></div>
-          </div>
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-            <select style="padding:5px 8px;border:1px solid var(--linha);border-radius:6px;font-size:.75rem"><option>HEB-001 · Hebraico I</option></select>
-            <span class="sim-tag ok" style="font-size:.7rem">● Chamada aberta</span>
-            <span style="font-family:monospace;font-weight:700;font-size:.85rem;color:var(--ambar);margin-left:auto">3 / 5</span>
-          </div>
-          <div class="sim-lista sim-chamada">
-            <div class="sim-row header"><span class="sim-cod">Código</span><span class="nome">Nome</span><span>Presença</span></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0001</span><span class="nome">Agatha Costa</span><button class="toggle-btn presente">✓ Presente</button></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0002</span><span class="nome">Rafael Xavier</span><button class="toggle-btn presente">✓ Presente</button></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0003</span><span class="nome">Ana Beatriz</span><button class="toggle-btn ausente">Ausente</button></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0004</span><span class="nome">Marcos Prado</span><button class="toggle-btn presente">✓ Presente</button></div>
-            <div class="sim-row"><span class="sim-cod">EBD-0005</span><span class="nome">Ester Camargo</span><button class="toggle-btn ausente">Ausente</button></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="passos">
-        <div class="passo">
-          <div class="passo-num">1</div>
-          <div class="passo-body"><h4>Selecione a turma e clique em "Abrir chamada"</h4><p>A lista de alunos matriculados aparece. Todos começam como Ausente.</p></div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">2</div>
-          <div class="passo-body"><h4>Toque no botão de cada aluno presente</h4><p>O botão muda de "Ausente" para "✓ Presente". O contador atualiza na hora.</p></div>
-        </div>
-        <div class="passo">
-          <div class="passo-num">3</div>
-          <div class="passo-body"><h4>Ao final da aula, clique em "Encerrar chamada"</h4><p>Somente sessões encerradas entram no cálculo de frequência dos alunos.</p></div>
-        </div>
-      </div>
-
-      <div class="callout" style="border-color:var(--erro);background:#f9e9e9">
-        <strong>⚠️ Não esqueça de encerrar!</strong>
-        Sempre clique em "Encerrar chamada" ao final da aula. Se a chamada ficar aberta, a aula não entra no histórico de frequência.
-      </div>
-    </section>
-
-    <!-- ── MATRÍCULA DO ALUNO ──────────────────────────── -->
-    <section class="section" id="matricula">
-      <div class="section-badge">✍️ Aluno</div>
-      <h2 class="section-title">Como o aluno se matricula</h2>
-      <p class="section-desc">O aluno não precisa de conta. Basta ler o QR Code e digitar o CPF — leva menos de 30 segundos.</p>
-
-      <div class="grid-2col">
-        <div>
-          <h3 style="font-size:.85rem;font-weight:700;margin-bottom:10px;color:var(--cinza)">✅ Aluno já tem cadastro</h3>
-          <div class="mock-frame">
-            <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/matricula.html</div></div>
-            <div class="mock-body">
-              <div style="font-size:.8rem;font-weight:700;margin-bottom:8px">Matricular na turma</div>
-              <div class="sim-field" style="margin-bottom:10px"><label>Seu CPF</label><input value="111.222.333-44" readonly></div>
-              <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;font-size:.75rem;margin-bottom:10px">
-                Olá, <strong>Agatha Costa</strong>!<br>Deseja se matricular em <strong>Hebraico I</strong>?
-              </div>
-              <div style="display:flex;gap:8px"><div class="sim-btn">Sim, matricular</div><div class="sim-btn sec">Voltar</div></div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <h3 style="font-size:.85rem;font-weight:700;margin-bottom:10px;color:var(--cinza)">👋 Aluno novo (primeiro acesso)</h3>
-          <div class="mock-frame">
-            <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/matricula.html</div></div>
-            <div class="mock-body">
-              <div style="background:#FBF3E3;border:1px solid #e8d9b0;border-radius:6px;padding:8px 10px;font-size:.68rem;margin-bottom:10px;color:#7a5a1a">
-                CPF não encontrado. Faça um cadastro rápido — vale para todas as turmas futuras.
-              </div>
-              <div class="sim-form">
-                <div class="sim-field"><label>Nome completo</label><input value="Novo Aluno" readonly></div>
-                <div class="sim-field"><label>Telefone</label><input value="(11) 98765-4321" readonly></div>
-                <div><div class="sim-btn">Cadastrar e matricular</div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ── FREQUÊNCIA ──────────────────────────────────── -->
-    <section class="section" id="frequencia">
-      <div class="section-badge">📈 Frequência</div>
-      <h2 class="section-title">Consultando a frequência</h2>
-      <p class="section-desc">O aluno consulta a própria frequência pelo CPF. Sem login, sem senha.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/area.html</div></div>
-        <div class="mock-body">
-          <div class="sim-field" style="margin-bottom:12px">
-            <label>Seu CPF</label>
-            <input value="111.222.333-44" readonly>
-          </div>
-          <div style="margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px">
-              <strong>Hebraico I</strong>
-              <span style="font-weight:700;color:var(--verde)">87%</span>
-            </div>
-            <div class="freq-bar"><div class="freq-fill alto" style="width:87%"></div></div>
-            <div style="font-size:.68rem;color:var(--cinza)">7 presenças · 1 falta · 8 aulas registradas</div>
-          </div>
-          <div style="margin-bottom:8px">
-            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px">
-              <strong>Doutrina Bíblica</strong>
-              <span style="font-weight:700;color:var(--ambar)">60%</span>
-            </div>
-            <div class="freq-bar"><div class="freq-fill medio" style="width:60%"></div></div>
-            <div style="font-size:.68rem;color:var(--cinza)">3 presenças · 2 faltas · 5 aulas registradas</div>
-          </div>
-          <div>
-            <div style="display:flex;justify-content:space-between;font-size:.8rem;margin-bottom:3px">
-              <strong>Grego I</strong>
-              <span style="font-weight:700;color:var(--erro)">33%</span>
-            </div>
-            <div class="freq-bar"><div class="freq-fill baixo" style="width:33%"></div></div>
-            <div style="font-size:.68rem;color:var(--erro);font-weight:600">⚠ Frequência baixa · 1 presença · 2 faltas</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="tabela-wrap">
-        <table>
-          <tr><th>Cor da barra</th><th>Faixa</th><th>Situação</th></tr>
-          <tr><td><span style="display:inline-block;width:40px;height:8px;background:var(--verde);border-radius:99px"></span></td><td>75% ou mais</td><td>✅ Frequência adequada</td></tr>
-          <tr><td><span style="display:inline-block;width:40px;height:8px;background:var(--ambar);border-radius:99px"></span></td><td>50% a 74%</td><td>⚠️ Atenção</td></tr>
-          <tr><td><span style="display:inline-block;width:40px;height:8px;background:var(--erro);border-radius:99px"></span></td><td>Abaixo de 50%</td><td>🚨 Frequência baixa</td></tr>
-        </table>
-      </div>
-    </section>
-
-    <!-- ── DASHBOARD ───────────────────────────────────── -->
-    <section class="section" id="dashboard">
-      <div class="section-badge">📊 Dashboard</div>
-      <h2 class="section-title">Visão geral da EBD</h2>
-      <p class="section-desc">Métricas consolidadas, gráfico de frequência por turma e alertas de evasão.</p>
-
-      <div class="mock-frame">
-        <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/dashboard.html</div></div>
-        <div class="mock-body">
-          <div class="grid-metricas">
-            <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:800;font-family:monospace">22</div>
-              <div style="font-size:.62rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em">Alunos</div>
-            </div>
-            <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:800;font-family:monospace;color:var(--verde)">20</div>
-              <div style="font-size:.62rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em">Ativos</div>
-            </div>
-            <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:800;font-family:monospace;color:var(--ambar)">78%</div>
-              <div style="font-size:.62rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em">Freq. Média</div>
-            </div>
-            <div style="background:#f6dede;border:1px solid #e8c0c0;border-radius:8px;padding:10px;text-align:center">
-              <div style="font-size:1.4rem;font-weight:800;font-family:monospace;color:var(--erro)">3</div>
-              <div style="font-size:.62rem;color:var(--erro);text-transform:uppercase;letter-spacing:.04em">Alertas</div>
-            </div>
-          </div>
-          <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:12px">
-            <div style="font-size:.7rem;font-weight:700;color:var(--cinza);margin-bottom:8px">FREQUÊNCIA POR TURMA</div>
-            <div style="display:flex;align-items:flex-end;gap:8px;height:60px">
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-                <div style="font-size:.6rem;color:var(--verde);font-weight:700">87%</div>
-                <div style="width:100%;background:var(--verde);height:52px;border-radius:4px 4px 0 0"></div>
-                <div style="font-size:.55rem;color:var(--cinza)">HEB-001</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-                <div style="font-size:.6rem;color:var(--ambar);font-weight:700">65%</div>
-                <div style="width:100%;background:var(--ambar);height:39px;border-radius:4px 4px 0 0"></div>
-                <div style="font-size:.55rem;color:var(--cinza)">GRE-001</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-                <div style="font-size:.6rem;color:var(--verde);font-weight:700">92%</div>
-                <div style="width:100%;background:var(--verde);height:55px;border-radius:4px 4px 0 0"></div>
-                <div style="font-size:.55rem;color:var(--cinza)">DOC-001</div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
-                <div style="font-size:.6rem;color:var(--erro);font-weight:700">41%</div>
-                <div style="width:100%;background:var(--erro);height:25px;border-radius:4px 4px 0 0"></div>
-                <div style="font-size:.55rem;color:var(--cinza)">INF-001</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="callout azul">
-        <strong>ℹ Alertas de evasão</strong>
-        Alunos com 2 ou mais faltas consecutivas aparecem automaticamente na seção de alertas. Use para acompanhar quem precisa de atenção pastoral.
-      </div>
-    </section>
-
-    <!-- ── DICAS FINAIS ────────────────────────────────── -->
-    <section class="section" id="dicas">
-      <div class="section-badge">💡 Dicas</div>
-      <h2 class="section-title">Ordem recomendada para começar</h2>
-
-      <div class="passos">
-        <div class="passo"><div class="passo-num">1</div><div class="passo-body"><h4>Crie as turmas</h4><p>Admin → Turmas → informe o prefixo (HEB, GRE…) e o nome.</p></div></div>
-        <div class="passo"><div class="passo-num">2</div><div class="passo-body"><h4>Cadastre os professores</h4><p>Admin → Professores → nome e e-mail. Depois peça para cada um criar a conta no site e aprove na aba Usuários.</p></div></div>
-        <div class="passo"><div class="passo-num">3</div><div class="passo-body"><h4>Importe os alunos</h4><p>Admin → Importar → arraste o CSV ou XLSX. Pode usar a exportação da Sympla diretamente.</p></div></div>
-        <div class="passo"><div class="passo-num">4</div><div class="passo-body"><h4>Imprima os QR Codes</h4><p>Professor → selecione a turma → Baixar QR da turma → imprima e cole na sala.</p></div></div>
-        <div class="passo"><div class="passo-num">5</div><div class="passo-body"><h4>Na primeira aula: alunos leem o QR</h4><p>Cada aluno lê o QR uma vez, informa o CPF e está matriculado. Nas aulas seguintes não precisa mais.</p></div></div>
-        <div class="passo"><div class="passo-num">6</div><div class="passo-body"><h4>Professor faz a chamada</h4><p>Abre a chamada → marca presentes → encerra. Dashboard atualiza automaticamente.</p></div></div>
-      </div>
-    </section>
-
-  </main>
+  </div>
 </div>
 
+<!-- ÍNDICE -->
+<div class="indice">
+  <div class="indice-grid">
+    <a class="indice-item" href="#criar-conta"><span class="ii">🔑</span> Criar conta</a>
+    <a class="indice-item" href="#turmas"><span class="ii">🏫</span> Criar turma</a>
+    <a class="indice-item" href="#importar"><span class="ii">📥</span> Importar alunos</a>
+    <a class="indice-item" href="#qrcode"><span class="ii">📲</span> QR Code</a>
+    <a class="indice-item" href="#chamada"><span class="ii">✅</span> Fazer chamada</a>
+    <a class="indice-item" href="#matricula"><span class="ii">✍️</span> Matrícula</a>
+    <a class="indice-item" href="#frequencia"><span class="ii">📈</span> Frequência</a>
+    <a class="indice-item" href="#dashboard"><span class="ii">📊</span> Dashboard</a>
+  </div>
+</div>
+
+<!-- ── CRIAR CONTA ──────────────────────────────────────── -->
+<section class="section" id="criar-conta">
+  <div class="sec-badge">🔑 Primeiros Passos</div>
+  <h2 class="sec-h2">Como criar sua conta</h2>
+  <p class="sec-desc">O primeiro cadastro no sistema vira Coordenador automaticamente. Professores criam conta e aguardam sua aprovação.</p>
+
+  <div class="mock">
+    <div class="mock-bar">
+      <div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+      <div class="mock-url">oreonsolucoes.github.io/EBD-Crescer/</div>
+    </div>
+    <div class="mock-body">
+      <div class="sh"><div class="sh-logo">CRESCER</div><div class="sh-title">Escola Bíblica Dominical</div></div>
+      <div class="s-abas"><div class="s-aba">Entrar</div><div class="s-aba on">Criar conta</div></div>
+      <div class="s-form">
+        <div><label class="s-lbl">Nome completo</label><input class="s-inp" value="Adalto Silva" readonly></div>
+        <div><label class="s-lbl">E-mail</label><input class="s-inp" value="adalto@ibc.com.br" readonly></div>
+        <div><label class="s-lbl">Senha (mín. 6 caracteres)</label><input class="s-inp" type="password" value="••••••••" readonly></div>
+        <div class="s-btn">Criar conta</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="passos">
+    <div class="passo"><div class="passo-n">1</div><div class="passo-body"><h4>Acesse o site</h4><p>Abra o navegador e acesse o endereço do sistema.</p></div></div>
+    <div class="passo"><div class="passo-n">2</div><div class="passo-body"><h4>Clique em "Criar conta"</h4><p>Preencha nome, e-mail e uma senha com pelo menos 6 caracteres.</p></div></div>
+    <div class="passo"><div class="passo-n">3</div><div class="passo-body"><h4>Você já é Coordenador!</h4><p>O primeiro usuário entra direto no painel de gestão.</p></div></div>
+  </div>
+
+  <div class="callout azul">
+    <strong>👨‍🏫 E os professores?</strong>
+    Peça para cada professor criar a conta no site. Depois aprove na aba <strong>Usuários</strong> e defina o papel.
+  </div>
+</section>
+
+<!-- ── PAINEL ADMIN ─────────────────────────────────────── -->
+<section class="section" id="painel">
+  <div class="sec-badge">⚙️ Coordenação</div>
+  <h2 class="sec-h2">Painel da Coordenação</h2>
+  <p class="sec-desc">Organizado em abas. Clique em cada aba para acessar a funcionalidade.</p>
+
+  <div class="mock">
+    <div class="mock-bar">
+      <div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div>
+      <div class="mock-url">…/admin.html</div>
+    </div>
+    <div class="mock-body">
+      <div class="sh">
+        <div class="sh-logo">CRESCER</div>
+        <div class="sh-title">Coordenação · Adalto</div>
+        <div class="sh-btns"><div class="sh-btn">❓ Tour</div><div class="sh-btn">📊</div><div class="sh-btn">Sair</div></div>
+      </div>
+      <div class="s-abas">
+        <div class="s-aba on">Alunos</div><div class="s-aba">Professores</div>
+        <div class="s-aba">Turmas</div><div class="s-aba">Matrículas</div>
+        <div class="s-aba">Importar</div><div class="s-aba">Usuários</div><div class="s-aba">Avaliações</div>
+      </div>
+      <div class="s-lista">
+        <div class="s-row hd"><span class="s-cod">Código</span><span class="s-nome">Nome</span><span class="s-tag">Status</span></div>
+        <div class="s-row"><span class="s-cod">EBD-0001</span><span class="s-nome">Agatha Costa</span><span class="s-tag ok">ativo</span></div>
+        <div class="s-row"><span class="s-cod">EBD-0002</span><span class="s-nome">Rafael Xavier</span><span class="s-tag ok">ativo</span></div>
+        <div class="s-row"><span class="s-cod">EBD-0003</span><span class="s-nome">Ana Beatriz</span><span class="s-tag ok">ativo</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="ci">👤</div><h4>Alunos</h4><p>Código EBD-XXXX automático, sem duplicidade.</p></div>
+    <div class="card"><div class="ci">👨‍🏫</div><h4>Professores</h4><p>Cadastre antes de criar as turmas.</p></div>
+    <div class="card"><div class="ci">🏫</div><h4>Turmas</h4><p>Prefixo + número sequencial automático.</p></div>
+    <div class="card"><div class="ci">📥</div><h4>Importar</h4><p>Lista CSV ou XLSX de uma vez.</p></div>
+    <div class="card"><div class="ci">🔐</div><h4>Usuários</h4><p>Aprove e defina papéis.</p></div>
+    <div class="card"><div class="ci">📝</div><h4>Avaliações</h4><p>Feedback anônimo dos alunos.</p></div>
+  </div>
+</section>
+
+<!-- ── TURMAS ───────────────────────────────────────────── -->
+<section class="section" id="turmas">
+  <div class="sec-badge">🏫 Turmas</div>
+  <h2 class="sec-h2">Criando turmas</h2>
+  <p class="sec-desc">Digite o prefixo da matéria e o código é gerado automaticamente.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/admin.html → Turmas</div></div>
+    <div class="mock-body">
+      <div class="s-form">
+        <div>
+          <label class="s-lbl">Prefixo da matéria *</label>
+          <input class="s-inp" value="HEB" readonly>
+          <div style="font-size:.65rem;color:var(--verde);margin-top:2px;font-weight:700">✓ Código gerado: HEB-002</div>
+        </div>
+        <div><label class="s-lbl">Nome da turma *</label><input class="s-inp" value="Hebraico II" readonly></div>
+        <div><label class="s-lbl">Professor</label><input class="s-inp" value="Pr. Daniel Alves" readonly></div>
+        <div class="s-btn">Criar turma</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabela">
+    <table>
+      <tr><th>Prefixo</th><th>Matéria</th><th>Exemplo</th></tr>
+      <tr><td>HEB</td><td>Hebraico</td><td>HEB-001, HEB-002…</td></tr>
+      <tr><td>GRE</td><td>Grego</td><td>GRE-001, GRE-002…</td></tr>
+      <tr><td>DOC</td><td>Doutrina</td><td>DOC-001, DOC-002…</td></tr>
+      <tr><td>INF</td><td>Infantil</td><td>INF-001, INF-002…</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ── IMPORTAR ─────────────────────────────────────────── -->
+<section class="section" id="importar">
+  <div class="sec-badge">📥 Importação</div>
+  <h2 class="sec-h2">Importar lista de alunos</h2>
+  <p class="sec-desc">Aceita CSV e XLSX. Funciona com exportação da Sympla sem ajuste de colunas.</p>
+
+  <div class="fluxo">
+    <div class="fluxo-item"><div class="fi">📄</div><div class="ft">Arrasta arquivo</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">🔍</div><div class="ft">Analisa</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">👁️</div><div class="ft">Pré-visualização</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">✅</div><div class="ft">Confirmar</div></div>
+  </div>
+
+  <div class="tabela">
+    <table>
+      <tr><th>Status</th><th>Significado</th><th>Ação</th></tr>
+      <tr><td><span class="s-tag ok">Novo</span></td><td>Não existe no banco</td><td>Cria EBD-XXXX</td></tr>
+      <tr><td><span class="s-tag az">Já cadastrado</span></td><td>CPF ou e-mail igual</td><td>Só matricula</td></tr>
+      <tr><td><span class="s-tag am">Possível dup.</span></td><td>Telefone coincide</td><td>Você decide</td></tr>
+      <tr><td><span class="s-tag err">Erro</span></td><td>Nome vazio ou e-mail inválido</td><td>Não grava</td></tr>
+    </table>
+  </div>
+
+  <div class="callout">
+    <strong>💡 Sympla</strong>
+    Baixe o arquivo de ingressos da Sympla e arraste direto — o sistema reconhece automaticamente.
+  </div>
+</section>
+
+<!-- ── USUÁRIOS ─────────────────────────────────────────── -->
+<section class="section" id="usuarios">
+  <div class="sec-badge">👥 Usuários</div>
+  <h2 class="sec-h2">Aprovando professores</h2>
+  <p class="sec-desc">Quando um professor cria conta, ele aparece aqui como Pendente. Você aprova e define o papel.</p>
+
+  <div class="passos">
+    <div class="passo"><div class="passo-n">1</div><div class="passo-body"><h4>Professor cria conta no site</h4><p>Acessa o site → Criar conta → preenche os dados.</p></div></div>
+    <div class="passo"><div class="passo-n">2</div><div class="passo-body"><h4>Você aprova em Admin → Usuários</h4><p>Seleciona o papel <strong>Professor</strong> e clica em Aprovar.</p></div></div>
+    <div class="passo"><div class="passo-n">3</div><div class="passo-body"><h4>Professor faz login</h4><p>A partir daí ele consegue entrar no painel de chamada.</p></div></div>
+  </div>
+</section>
+
+<!-- ── QR CODE ──────────────────────────────────────────── -->
+<section class="section" id="qrcode">
+  <div class="sec-badge">📲 QR Code</div>
+  <h2 class="sec-h2">QR Code da turma</h2>
+  <p class="sec-desc">Cada turma tem um QR Code fixo — o mesmo para todas as aulas. Imprima uma vez e cole na parede.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/professor.html</div></div>
+    <div class="mock-body">
+      <div class="s-qr">
+        <div class="qr-box"></div>
+        <div style="font-size:.72rem;text-align:center;color:var(--cinza)"><strong style="color:var(--azul);display:block">QR Code — HEB-001</strong>Hebraico I · fixo para todas as aulas</div>
+        <div class="s-btn" style="font-size:.68rem">⬇️ Baixar QR da turma</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fluxo">
+    <div class="fluxo-item"><div class="fi">📱</div><div class="ft">Lê o QR</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">🔢</div><div class="ft">Digita CPF</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">✅</div><div class="ft">Matriculado!</div></div>
+    <div class="fluxo-seta">›</div>
+    <div class="fluxo-item"><div class="fi">📋</div><div class="ft">Na chamada</div></div>
+  </div>
+
+  <div class="callout verde">
+    <strong>✓ Imprima e plastifique</strong>
+    O QR nunca muda. Cole na entrada da sala. Aluno lê uma vez e está matriculado para sempre naquela turma.
+  </div>
+</section>
+
+<!-- ── CHAMADA ──────────────────────────────────────────── -->
+<section class="section" id="chamada">
+  <div class="sec-badge">✅ Professor</div>
+  <h2 class="sec-h2">Fazendo a chamada</h2>
+  <p class="sec-desc">O professor marca quem está presente. Um toque por aluno. Atualiza na hora.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/professor.html</div></div>
+    <div class="mock-body">
+      <div class="sh">
+        <div class="sh-logo">CRESCER</div>
+        <div class="sh-title">Prof. Daniel Alves</div>
+        <div class="sh-btns"><div class="sh-btn">❓ Tour</div><div class="sh-btn">Sair</div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+        <select style="padding:5px;border:1px solid var(--linha);border-radius:6px;font-size:.72rem;flex:1"><option>HEB-001 · Hebraico I</option></select>
+        <span class="s-tag ok">● Aberta</span>
+        <span style="font-family:monospace;font-weight:800;font-size:.85rem;color:var(--ambar)">3/5</span>
+      </div>
+      <div class="s-lista">
+        <div class="s-row hd"><span class="s-cod">Código</span><span class="s-nome">Nome</span><span>Presença</span></div>
+        <div class="s-row"><span class="s-cod">EBD-0001</span><span class="s-nome">Agatha</span><button class="tog p">✓ Presente</button></div>
+        <div class="s-row"><span class="s-cod">EBD-0002</span><span class="s-nome">Rafael</span><button class="tog p">✓ Presente</button></div>
+        <div class="s-row"><span class="s-cod">EBD-0003</span><span class="s-nome">Ana Beatriz</span><button class="tog a">Ausente</button></div>
+        <div class="s-row"><span class="s-cod">EBD-0004</span><span class="s-nome">Marcos</span><button class="tog p">✓ Presente</button></div>
+        <div class="s-row"><span class="s-cod">EBD-0005</span><span class="s-nome">Ester</span><button class="tog a">Ausente</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="passos">
+    <div class="passo"><div class="passo-n">1</div><div class="passo-body"><h4>Selecione a turma e clique "Abrir chamada"</h4><p>Todos começam como Ausente.</p></div></div>
+    <div class="passo"><div class="passo-n">2</div><div class="passo-body"><h4>Toque no botão de cada aluno presente</h4><p>O contador atualiza instantaneamente.</p></div></div>
+    <div class="passo"><div class="passo-n">3</div><div class="passo-body"><h4>Ao final, clique "Encerrar chamada"</h4><p>Só sessões encerradas entram no cálculo de frequência.</p></div></div>
+  </div>
+
+  <div class="callout erro">
+    <strong>⚠️ Não esqueça de encerrar!</strong>
+    Sempre encerre a chamada ao final da aula. Chamadas abertas não contam na frequência.
+  </div>
+</section>
+
+<!-- ── MATRÍCULA DO ALUNO ───────────────────────────────── -->
+<section class="section" id="matricula">
+  <div class="sec-badge">✍️ Aluno</div>
+  <h2 class="sec-h2">Como o aluno se matricula</h2>
+  <p class="sec-desc">Sem conta, sem senha. Basta ler o QR e digitar o CPF — menos de 30 segundos.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/matricula.html</div></div>
+    <div class="mock-body">
+      <div class="s-form">
+        <div><label class="s-lbl">Seu CPF</label><input class="s-inp" value="111.222.333-44" readonly></div>
+        <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;font-size:.78rem">
+          Olá, <strong>Agatha Costa</strong>! Deseja se matricular em <strong>Hebraico I</strong>?
+        </div>
+        <div style="display:flex;gap:8px">
+          <div class="s-btn">Sim, matricular</div>
+          <div class="s-btn sec">Voltar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout azul">
+    <strong>👋 Aluno novo?</strong>
+    Se o CPF não estiver cadastrado, o sistema pede nome e telefone — cria o cadastro EBD-XXXX e já matricula na turma. Vale para todas as turmas futuras.
+  </div>
+
+  <div class="callout verde">
+    <strong>✓ Presença é com o professor</strong>
+    O aluno não precisa fazer nada para registrar presença. O professor marca em cada aula.
+  </div>
+</section>
+
+<!-- ── FREQUÊNCIA ───────────────────────────────────────── -->
+<section class="section" id="frequencia">
+  <div class="sec-badge">📈 Frequência</div>
+  <h2 class="sec-h2">Consultando a frequência</h2>
+  <p class="sec-desc">O aluno consulta a própria frequência pelo CPF. Sem login, sem senha.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/area.html</div></div>
+    <div class="mock-body">
+      <div><label class="s-lbl">Seu CPF</label><input class="s-inp" value="111.222.333-44" readonly style="margin-bottom:14px"></div>
+      <div class="freq-item">
+        <div class="freq-top"><strong>Hebraico I</strong><span style="color:var(--verde);font-weight:700">87%</span></div>
+        <div class="freq-bar"><div class="freq-fill v" style="width:87%"></div></div>
+        <div class="freq-sub">7 presenças · 1 falta · 8 aulas</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-top"><strong>Doutrina Bíblica</strong><span style="color:var(--ambar);font-weight:700">60%</span></div>
+        <div class="freq-bar"><div class="freq-fill m" style="width:60%"></div></div>
+        <div class="freq-sub">3 presenças · 2 faltas · 5 aulas</div>
+      </div>
+      <div class="freq-item">
+        <div class="freq-top"><strong>Grego I</strong><span style="color:var(--erro);font-weight:700">33%</span></div>
+        <div class="freq-bar"><div class="freq-fill e" style="width:33%"></div></div>
+        <div class="freq-sub" style="color:var(--erro);font-weight:600">⚠ Frequência baixa · 1 presença · 2 faltas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabela">
+    <table>
+      <tr><th>Cor</th><th>Faixa</th><th>Situação</th></tr>
+      <tr><td><span style="display:inline-block;width:32px;height:7px;background:var(--verde);border-radius:99px"></span></td><td>75% ou mais</td><td>✅ Adequada</td></tr>
+      <tr><td><span style="display:inline-block;width:32px;height:7px;background:var(--ambar);border-radius:99px"></span></td><td>50% a 74%</td><td>⚠️ Atenção</td></tr>
+      <tr><td><span style="display:inline-block;width:32px;height:7px;background:var(--erro);border-radius:99px"></span></td><td>Abaixo de 50%</td><td>🚨 Baixa</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ── DASHBOARD ────────────────────────────────────────── -->
+<section class="section" id="dashboard">
+  <div class="sec-badge">📊 Dashboard</div>
+  <h2 class="sec-h2">Visão geral da EBD</h2>
+  <p class="sec-desc">Métricas consolidadas, gráfico de frequência e alertas de evasão.</p>
+
+  <div class="mock">
+    <div class="mock-bar"><div class="mock-dots"><div class="mock-dot"></div><div class="mock-dot"></div><div class="mock-dot"></div></div><div class="mock-url">…/dashboard.html</div></div>
+    <div class="mock-body">
+      <div class="metricas">
+        <div class="metrica"><span class="mn">22</span><span class="ml">Alunos</span></div>
+        <div class="metrica"><span class="mn" style="color:var(--verde)">20</span><span class="ml">Ativos</span></div>
+        <div class="metrica"><span class="mn" style="color:var(--ambar)">78%</span><span class="ml">Freq. Média</span></div>
+        <div class="metrica" style="background:#f6dede;border-color:#e8c0c0"><span class="mn" style="color:var(--erro)">3</span><span class="ml" style="color:var(--erro)">Alertas</span></div>
+      </div>
+      <div class="grafico">
+        <div class="grafico-titulo">Frequência por turma</div>
+        <div class="barras">
+          <div class="barra-col"><div class="barra-val" style="color:var(--verde)">87%</div><div class="barra-fill" style="background:var(--verde);height:61px"></div><div class="barra-lbl">HEB-001</div></div>
+          <div class="barra-col"><div class="barra-val" style="color:var(--ambar)">65%</div><div class="barra-fill" style="background:var(--ambar);height:45px"></div><div class="barra-lbl">GRE-001</div></div>
+          <div class="barra-col"><div class="barra-val" style="color:var(--verde)">92%</div><div class="barra-fill" style="background:var(--verde);height:64px"></div><div class="barra-lbl">DOC-001</div></div>
+          <div class="barra-col"><div class="barra-val" style="color:var(--erro)">41%</div><div class="barra-fill" style="background:var(--erro);height:29px"></div><div class="barra-lbl">INF-001</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout azul">
+    <strong>ℹ Alertas de evasão</strong>
+    Alunos com 2 ou mais faltas seguidas aparecem automaticamente. Use para acompanhamento pastoral.
+  </div>
+</section>
+
+<!-- ── DICAS FINAIS ─────────────────────────────────────── -->
+<section class="section" id="dicas">
+  <div class="sec-badge">💡 Por onde começar</div>
+  <h2 class="sec-h2">Ordem recomendada</h2>
+
+  <div class="passos">
+    <div class="passo"><div class="passo-n">1</div><div class="passo-body"><h4>Crie as turmas</h4><p>Admin → Turmas → informe o prefixo (HEB, GRE…)</p></div></div>
+    <div class="passo"><div class="passo-n">2</div><div class="passo-body"><h4>Cadastre os professores e aprove</h4><p>Eles criam conta → você aprova em Admin → Usuários.</p></div></div>
+    <div class="passo"><div class="passo-n">3</div><div class="passo-body"><h4>Importe os alunos</h4><p>Admin → Importar → arraste o CSV ou XLSX.</p></div></div>
+    <div class="passo"><div class="passo-n">4</div><div class="passo-body"><h4>Imprima os QR Codes</h4><p>Professor → selecione a turma → Baixar QR da turma.</p></div></div>
+    <div class="passo"><div class="passo-n">5</div><div class="passo-body"><h4>Na primeira aula, alunos leem o QR</h4><p>Cada aluno lê uma vez e está matriculado para sempre.</p></div></div>
+    <div class="passo"><div class="passo-n">6</div><div class="passo-body"><h4>Professor faz a chamada</h4><p>Abre → marca presentes → encerra. Dashboard atualiza.</p></div></div>
+  </div>
+</section>
+
 <footer>
-  <strong>Sistema CRESCER · Educação Cristã</strong><br>
+  <strong>Sistema CRESCER · Educação Cristã</strong>
   Igreja Batista da Cidade — IBC<br>
   <span style="color:var(--ambar)">oreonsolucoes.github.io/EBD-Crescer/</span>
 </footer>
 
-<script>
-// Destaca link ativo no nav conforme scroll
-const secs = document.querySelectorAll('.section');
-const links = document.querySelectorAll('.sidenav a');
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      links.forEach(l => l.classList.remove('active'));
-      const a = document.querySelector(`.sidenav a[href="#${e.target.id}"]`);
-      if (a) a.classList.add('active');
-    }
-  });
-}, { rootMargin: '-30% 0px -60% 0px' });
-secs.forEach(s => obs.observe(s));
-</script>
 </body>
 </html>
