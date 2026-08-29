@@ -35,4 +35,4 @@ export const db = initializeFirestore(app, {
 });
 
 // Flag simples para o app avisar quando ainda está com placeholders.
-export const CONFIG_PENDENTE = firebaseConfig.apiKey === "COLE_SUA_API_KEY";
+export const CONFIG_PENDENTE = false;
