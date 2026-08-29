@@ -159,11 +159,10 @@ carregarTurmas();
 
 // Tour guiado do professor
 setTimeout(() => tourProfessor(), 1200);
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.createElement("button");
-  btn.className = "btn btn-secundario";
-  btn.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
-  btn.textContent = "Ver tour";
-  btn.addEventListener("click", () => { resetarTour("tour-professor-v1"); tourProfessor(true); });
-  document.querySelector(".topo .barra")?.appendChild(btn);
-});
+
+const btnTourProf = document.createElement("button");
+btnTourProf.className = "btn btn-secundario";
+btnTourProf.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
+btnTourProf.textContent = "❓ Tour";
+btnTourProf.addEventListener("click", () => { resetarTour("tour-professor-v1"); tourProfessor(true); });
+document.querySelector(".topo .barra")?.appendChild(btnTourProf);

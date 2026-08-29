@@ -29,15 +29,13 @@ if (btnSair) btnSair.addEventListener("click", async () => { await sair(); locat
 // Tour guiado — inicia na primeira visita
 setTimeout(() => tourAdmin(), 800);
 
-// Botão "Ver tour" no cabeçalho
-document.addEventListener("DOMContentLoaded", () => {
-  const btn = document.createElement("button");
-  btn.className = "btn btn-secundario";
-  btn.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
-  btn.textContent = "Ver tour";
-  btn.addEventListener("click", () => { resetarTour("tour-admin-v1"); tourAdmin(true); });
-  document.querySelector(".topo .barra")?.appendChild(btn);
-});
+// Botão "Ver tour" no cabeçalho — adicionado direto, sem DOMContentLoaded
+const btnTour = document.createElement("button");
+btnTour.className = "btn btn-secundario";
+btnTour.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
+btnTour.textContent = "❓ Tour";
+btnTour.addEventListener("click", () => { resetarTour("tour-admin-v1"); tourAdmin(true); });
+document.querySelector(".topo .barra")?.appendChild(btnTour);
 
 // ---------- utilidades de UI ----------
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
