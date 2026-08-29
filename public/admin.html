@@ -77,7 +77,7 @@
     <section class="painel" id="painel-turmas" hidden>
       <div class="cartao">
         <h2>Criar turma</h2>
-        <p class="dica">Digite o <strong>prefixo da matéria</strong> (ex.: <code>HEB</code>, <code>GRE</code>, <code>DOC</code>) e o código sequencial é gerado automaticamente.</p>
+        <p class="dica">Defina o prefixo, o dia da semana e a duração — o sistema calcula automaticamente as datas das aulas e encerra a turma quando o prazo acabar.</p>
         <form id="form-turma">
           <div class="grade duas">
             <div>
@@ -88,12 +88,28 @@
             <div>
               <label for="tu-codigo">Ou código manual (opcional)</label>
               <input id="tu-codigo" placeholder="Deixe vazio para usar o prefixo" style="text-transform:uppercase" />
-              <p class="dica">Preencha só se quiser substituir o código gerado.</p>
             </div>
             <div><label for="tu-nome">Nome da turma *</label><input id="tu-nome" required placeholder="Ex.: Hebraico I" /></div>
             <div><label for="tu-professor">Professor</label><select id="tu-professor"></select></div>
-            <div><label for="tu-dia">Dia</label><input id="tu-dia" placeholder="Domingo" /></div>
+            <div>
+              <label for="tu-dia-semana">Dia da semana *</label>
+              <select id="tu-dia-semana" required>
+                <option value="0">Domingo</option>
+                <option value="1">Segunda-feira</option>
+                <option value="2">Terça-feira</option>
+                <option value="3">Quarta-feira</option>
+                <option value="4">Quinta-feira</option>
+                <option value="5">Sexta-feira</option>
+                <option value="6">Sábado</option>
+              </select>
+            </div>
             <div><label for="tu-horario">Horário</label><input id="tu-horario" placeholder="09:00" /></div>
+            <div><label for="tu-data-inicio">Data de início *</label><input id="tu-data-inicio" type="date" required /></div>
+            <div>
+              <label for="tu-semanas">Duração (semanas) *</label>
+              <input id="tu-semanas" type="number" min="1" max="52" required placeholder="Ex.: 12" />
+              <p class="dica" id="tu-preview-datas" style="margin-top:4px"></p>
+            </div>
           </div>
           <div class="acoes"><button type="submit" class="btn btn-primario">Criar turma</button></div>
         </form>
