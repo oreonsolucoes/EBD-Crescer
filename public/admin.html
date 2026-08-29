@@ -12,7 +12,7 @@
 <body>
   <header class="topo">
     <div class="barra">
-      <div class="selo">EBD</div>
+      <img src="./img/logo-header.png" alt="Crescer - Educação Cristã" class="logo-header">
       <div>
         <div class="titulo">Coordenação</div>
         <div class="sub" id="ola-coordenador">Escola Bíblica Dominical — IBC</div>
@@ -131,12 +131,6 @@
         <div class="acoes" style="margin-bottom:14px">
           <button id="btn-modelo" class="btn btn-secundario" type="button">Baixar modelo (CSV)</button>
         </div>
-        <div class="grade">
-          <div>
-            <label for="imp-turma">Matricular importados em (opcional)</label>
-            <select id="imp-turma"></select>
-          </div>
-        </div>
         <div id="dropzone" class="dropzone" style="margin-top:14px" tabindex="0" role="button" aria-label="Selecionar arquivo para importar">
           Arraste um arquivo aqui ou <strong>clique para escolher</strong><br>
           <span class="dica">CSV ou XLSX</span>
@@ -150,9 +144,19 @@
         <p class="dica">Confira o status de cada linha antes de gravar. Marque “confirmar” para incluir linhas de possível duplicidade.</p>
         <div id="imp-preview"><p class="vazio">Nenhum arquivo carregado ainda.</p></div>
         <div id="bloco-confirmar" hidden>
-          <div class="acoes">
+          <div class="acoes" style="align-items:center;flex-wrap:wrap;gap:10px">
             <button id="btn-confirmar-import" class="btn btn-primario" disabled>Confirmar e gravar</button>
+            <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:200px">
+              <span style="font-size:.82rem;color:var(--tinta-2);white-space:nowrap">📚 Matricular todos em:</span>
+              <select id="imp-turma" style="flex:1;padding:10px 12px;font:inherit;
+                background:#fff;color:var(--tinta);border:2px solid var(--ambar);
+                border-radius:8px;cursor:pointer;font-weight:600">
+              </select>
+            </div>
           </div>
+          <p class="dica" style="margin-top:8px">
+            Escolha uma turma para matricular automaticamente todos os alunos importados. Deixe em branco para só cadastrar, sem matricular.
+          </p>
         </div>
         <div id="imp-resultado" style="margin-top:14px"></div>
       </div>
