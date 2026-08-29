@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matrícula · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Matrícula</div>
+        <div class="sub" id="nome-turma">Carregando…</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 440px;">
+    <div id="erro"></div>
+
+    <!-- Passo 1: CPF -->
+    <section class="cartao" id="passo-cpf" hidden>
+      <h2>Matricular na turma</h2>
+      <p class="dica">Informe seu CPF para o sistema localizar seu cadastro.</p>
+      <form id="form-cpf">
+        <div><label for="in-cpf">Seu CPF</label>
+          <input id="in-cpf" inputmode="numeric" required placeholder="000.000.000-00" /></div>
+        <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Continuar</button></div>
+      </form>
+    </section>
+
+    <!-- Passo 2: confirmar matrícula (aluno já existe) -->
+    <section class="cartao" id="passo-confirmar" hidden>
+      <p id="confirmar-txt" style="font-size:1.05rem"></p>
+      <div class="acoes">
+        <button id="btn-confirmar-mat" class="btn btn-primario" style="flex:1;justify-content:center">Sim, matricular</button>
+        <button id="btn-cancelar-mat" class="btn btn-secundario">Voltar</button>
+      </div>
+    </section>
+
+    <!-- Passo 3: cadastro rápido (aluno novo) -->
+    <section class="cartao" id="passo-cadastro" hidden>
+      <div id="aviso-cadastro"></div>
+      <form id="form-cadastro">
+        <input type="hidden" id="cpf-oculto" />
+        <div class="grade">
+          <div><label for="in-nome">Nome completo</label>
+            <input id="in-nome" required placeholder="Nome e sobrenome" autocomplete="name" /></div>
+          <div><label for="in-telefone">Telefone</label>
+            <input id="in-telefone" inputmode="tel" placeholder="(19) 99999-0000" autocomplete="tel" /></div>
+        </div>
+        <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Cadastrar e matricular</button></div>
+      </form>
+    </section>
+
+    <!-- Passo 4: pronto -->
+    <section class="cartao" id="passo-pronto" hidden style="text-align:center">
+      <div style="font-size:2.4rem;line-height:1;margin-bottom:8px">✓</div>
+      <h2 id="pr-titulo" style="color:var(--verde)">Matrícula confirmada!</h2>
+      <div class="tabela-wrap" style="margin-top:12px;text-align:left">
+        <table><tbody>
+          <tr><th>Aluno</th><td id="pr-nome"></td></tr>
+          <tr><th>Código</th><td class="mono" id="pr-codigo"></td></tr>
+          <tr><th>Turma</th><td id="pr-turma"></td></tr>
+        </tbody></table>
+      </div>
+      <p class="dica" style="margin-top:14px">Pronto! A presença nas aulas é registrada pelo professor. Bom estudo!</p>
+    </section>
+  </main>
+
+  <script type="module" src="./js/app-matricula.js"></script>
+</body>
+</html>

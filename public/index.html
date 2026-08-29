@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EBD IBC — Entrar</title>
+  <meta name="description" content="Sistema de gestão da Escola Bíblica Dominical da Igreja Batista da Cidade." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Escola Bíblica Dominical</div>
+        <div class="sub">Igreja Batista da Cidade — IBC</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width: 460px;">
+    <div id="estado-msg"></div>
+
+    <div class="cartao">
+      <div class="abas" role="tablist" style="margin-bottom:16px">
+        <button class="aba" role="tab" aria-selected="true"  data-painel="painel-login">Entrar</button>
+        <button class="aba" role="tab" aria-selected="false" data-painel="painel-cadastro">Criar conta</button>
+      </div>
+
+      <section class="painel" id="painel-login">
+        <form id="form-login">
+          <div class="grade">
+            <div><label for="lg-email">E-mail</label><input id="lg-email" type="email" required autocomplete="email" /></div>
+            <div><label for="lg-senha">Senha</label><input id="lg-senha" type="password" required autocomplete="current-password" /></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Entrar</button></div>
+        </form>
+      </section>
+
+      <section class="painel" id="painel-cadastro" hidden>
+        <p class="dica">Coordenadores e professores criam a conta aqui. O acesso é liberado após aprovação da coordenação.</p>
+        <form id="form-cadastro">
+          <div class="grade">
+            <div><label for="cd-nome">Nome completo</label><input id="cd-nome" required autocomplete="name" /></div>
+            <div><label for="cd-email">E-mail</label><input id="cd-email" type="email" required autocomplete="email" /></div>
+            <div><label for="cd-senha">Senha (mín. 6 caracteres)</label><input id="cd-senha" type="password" required minlength="6" autocomplete="new-password" /></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Criar conta</button></div>
+        </form>
+      </section>
+    </div>
+
+    <p class="dica" style="text-align:center">
+      É aluno? <a href="leitor.html">Leia o QR da sua turma</a> para se matricular
+      ou <a href="area.html">consulte sua frequência</a>.
+    </p>
+  </main>
+
+  <script type="module" src="./js/app-login.js"></script>
+</body>
+</html>

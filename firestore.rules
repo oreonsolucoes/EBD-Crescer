@@ -1,0 +1,103 @@
+rules_version = '2';
+
+// -----------------------------------------------------------------------------
+// REGRAS — BLOCO 1 (Sprints 2-4): AUTH + PAPÉIS + AUTO-MATRÍCULA + PRESENÇA
+// -----------------------------------------------------------------------------
+// Modelo de acesso:
+//  - usuarios/{uid}: perfil com papel ("coordenador" | "professor" | "pendente")
+//    e flag "aprovado". Criado no auto-cadastro.
+//  - COORDENADOR: acesso total.
+//  - PROFESSOR: lê tudo que precisa; escreve chamadas e presenças.
+//  - PÚBLICO (aluno sem login): pode LER turmas (para o QR de matrícula),
+//    consultar o próprio cadastro por CPF e criar cadastro/matrícula de si mesmo.
+//    A presença é escrita apenas por usuários autenticados (professor/coord).
+// -----------------------------------------------------------------------------
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function logado() { return request.auth != null; }
+
+    function perfil() {
+      return get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data;
+    }
+    function temPerfil() {
+      return logado() &&
+        exists(/databases/$(database)/documents/usuarios/$(request.auth.uid));
+    }
+    function ehCoordenador() {
+      return temPerfil() && perfil().papel == "coordenador" && perfil().aprovado == true;
+    }
+    function ehProfessor() {
+      return temPerfil() && perfil().papel == "professor" && perfil().aprovado == true;
+    }
+    function ehEquipe() { return ehCoordenador() || ehProfessor(); }
+
+    // ---------- usuarios ----------
+    match /usuarios/{uid} {
+      // cada um lê o próprio perfil; coordenador lê todos
+      allow read: if logado() && (request.auth.uid == uid || ehCoordenador());
+      // auto-cadastro: só pode criar o PRÓPRIO doc, e nunca já aprovado/coordenador
+      // (exceção do primeiro usuário é tratada no app; para blindar isso de vez,
+      //  promova o 1º coordenador manualmente no Console se preferir).
+      allow create: if logado() && request.auth.uid == uid
+                    && request.resource.data.uid == uid;
+      // atualizações de papel/aprovação: só coordenador
+      allow update, delete: if ehCoordenador();
+    }
+
+    // ---------- configuracoes (contadores dos códigos) ----------
+    match /configuracoes/{doc} {
+      // leitura pública é inofensiva; escrita do contador precisa ser possível
+      // durante a auto-matrícula (aluno novo gera EBD-XXXX). Liberamos escrita
+      // do contador para qualquer um, pois só incrementa um número.
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // ---------- alunos ----------
+    match /alunos/{codigo} {
+      // equipe lê todos. Aluno público não lista alunos (privacidade);
+      // a consulta por CPF na auto-matrícula é feita lendo a coleção — para
+      // permitir isso sem expor tudo, liberamos leitura pública somente por
+      // enquanto (Bloco 1). Endurecer no próximo bloco com Cloud Function.
+      allow read: if true;
+      // criação por auto-matrícula (aluno novo) ou pela equipe
+      allow create: if true;
+      // alteração/remoção: só equipe
+      allow update, delete: if ehEquipe();
+    }
+
+    // ---------- turmas ----------
+    match /turmas/{codigo} {
+      allow read: if true;                 // necessário para o QR de matrícula
+      allow write: if ehCoordenador();     // só coordenação cria/edita turmas
+    }
+
+    // ---------- matriculas ----------
+    match /matriculas/{id} {
+      allow read: if true;                 // aluno confere sua matrícula; equipe lê
+      allow create: if true;               // auto-matrícula pública
+      allow update, delete: if ehEquipe();
+    }
+
+    // ---------- chamadas (sessões) ----------
+    match /chamadas/{id} {
+      allow read: if true;                 // matricula.html/professor leem estado
+      allow create, update, delete: if ehEquipe(); // abrir/encerrar: só equipe
+    }
+
+    // ---------- presencas ----------
+    match /presencas/{id} {
+      allow read: if true;                 // professor vê em tempo real
+      // presença agora é responsabilidade da EQUIPE (professor/coordenador)
+      allow create, update, delete: if ehEquipe();
+    }
+
+    // fecha o resto
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

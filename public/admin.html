@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Coordenação · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Coordenação</div>
+        <div class="sub" id="ola-coordenador">Escola Bíblica Dominical — IBC</div>
+      </div>
+      <button id="btn-sair" class="btn btn-secundario" style="margin-left:auto;padding:7px 12px;font-size:.85rem;">Sair</button>
+      <a href="dashboard.html" class="btn btn-secundario" style="padding:7px 12px;font-size:.85rem;">Dashboard</a>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="abas" role="tablist">
+      <button class="aba" role="tab" aria-selected="true"  data-painel="painel-alunos">Alunos</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-professores">Professores</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-turmas">Turmas</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-matriculas">Matrículas</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-importar">Importar</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-usuarios">Usuários</button>
+      <button class="aba" role="tab" aria-selected="false" data-painel="painel-avaliacoes">Avaliações</button>
+    </div>
+
+    <!-- ALUNOS -->
+    <section class="painel" id="painel-alunos">
+      <div class="cartao">
+        <h2>Cadastrar aluno</h2>
+        <p class="dica">O código <strong>EBD-XXXX</strong> é gerado automaticamente e de forma atômica — sem risco de duplicidade.</p>
+        <form id="form-aluno">
+          <div class="grade duas">
+            <div><label for="al-nome">Nome *</label><input id="al-nome" required autocomplete="off" /></div>
+            <div><label for="al-telefone">Telefone</label><input id="al-telefone" inputmode="tel" placeholder="(19) 99999-0000" /></div>
+            <div><label for="al-email">E-mail</label><input id="al-email" type="email" placeholder="nome@exemplo.com" /></div>
+            <div><label for="al-cpf">CPF (opcional)</label><input id="al-cpf" inputmode="numeric" placeholder="usado só para evitar duplicidade" /></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario">Cadastrar aluno</button></div>
+        </form>
+      </div>
+      <div class="cartao">
+        <h2>Alunos <span class="contagem" id="contagem-alunos"></span></h2>
+        <div id="lista-alunos"></div>
+      </div>
+    </section>
+
+    <!-- PROFESSORES -->
+    <section class="painel" id="painel-professores" hidden>
+      <div class="cartao">
+        <h2>Cadastrar professor</h2>
+        <p class="dica">Código <strong>PROF-XXXX</strong> automático. Vínculo com login entra no Sprint 2.</p>
+        <form id="form-professor">
+          <div class="grade duas">
+            <div><label for="pr-nome">Nome *</label><input id="pr-nome" required autocomplete="off" /></div>
+            <div><label for="pr-email">E-mail</label><input id="pr-email" type="email" /></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario">Cadastrar professor</button></div>
+        </form>
+      </div>
+      <div class="cartao">
+        <h2>Professores <span class="contagem" id="contagem-professores"></span></h2>
+        <div id="lista-professores"></div>
+      </div>
+    </section>
+
+    <!-- TURMAS -->
+    <section class="painel" id="painel-turmas" hidden>
+      <div class="cartao">
+        <h2>Criar turma</h2>
+        <p class="dica">Defina um código curto e único, ex.: <code>TURMA-HEB1</code>.</p>
+        <form id="form-turma">
+          <div class="grade duas">
+            <div><label for="tu-codigo">Código *</label><input id="tu-codigo" required placeholder="TURMA-HEB1" style="text-transform:uppercase" /></div>
+            <div><label for="tu-nome">Nome *</label><input id="tu-nome" required placeholder="Hebraico I" /></div>
+            <div><label for="tu-professor">Professor</label><select id="tu-professor"></select></div>
+            <div><label for="tu-dia">Dia</label><input id="tu-dia" placeholder="Domingo" /></div>
+            <div><label for="tu-horario">Horário</label><input id="tu-horario" placeholder="09:00" /></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario">Criar turma</button></div>
+        </form>
+      </div>
+      <div class="cartao">
+        <h2>Turmas <span class="contagem" id="contagem-turmas"></span></h2>
+        <div id="lista-turmas"></div>
+      </div>
+    </section>
+
+    <!-- MATRÍCULAS -->
+    <section class="painel" id="painel-matriculas" hidden>
+      <div class="cartao">
+        <h2>Nova matrícula</h2>
+        <p class="dica">Uma pessoa = um cadastro. Aqui você vincula um aluno existente a uma turma.</p>
+        <form id="form-matricula">
+          <div class="grade duas">
+            <div><label for="ma-aluno">Aluno *</label><select id="ma-aluno"></select></div>
+            <div><label for="ma-turma">Turma *</label><select id="ma-turma"></select></div>
+          </div>
+          <div class="acoes"><button type="submit" class="btn btn-primario">Matricular</button></div>
+        </form>
+      </div>
+      <div class="cartao">
+        <h2>Matrículas <span class="contagem" id="contagem-matriculas"></span></h2>
+        <div id="lista-matriculas"></div>
+      </div>
+    </section>
+
+    <!-- IMPORTAR -->
+    <section class="painel" id="painel-importar" hidden>
+      <div class="cartao">
+        <h2>Importação em massa</h2>
+        <p class="dica">Aceita <strong>CSV</strong> e <strong>XLSX</strong>. Colunas: Nome, Telefone, Email, CPF. Tudo é processado no seu navegador; nada sai antes da sua confirmação.</p>
+        <div class="acoes" style="margin-bottom:14px">
+          <button id="btn-modelo" class="btn btn-secundario" type="button">Baixar modelo (CSV)</button>
+        </div>
+        <div class="grade">
+          <div>
+            <label for="imp-turma">Matricular importados em (opcional)</label>
+            <select id="imp-turma"></select>
+          </div>
+        </div>
+        <div id="dropzone" class="dropzone" style="margin-top:14px" tabindex="0" role="button" aria-label="Selecionar arquivo para importar">
+          Arraste um arquivo aqui ou <strong>clique para escolher</strong><br>
+          <span class="dica">CSV ou XLSX</span>
+        </div>
+        <input id="imp-arquivo" type="file" accept=".csv,.xlsx,.xls" hidden />
+        <p id="imp-status" class="dica" style="margin-top:10px"></p>
+      </div>
+
+      <div class="cartao" id="cartao-preview">
+        <h2>Pré-visualização</h2>
+        <p class="dica">Confira o status de cada linha antes de gravar. Marque “confirmar” para incluir linhas de possível duplicidade.</p>
+        <div id="imp-preview"><p class="vazio">Nenhum arquivo carregado ainda.</p></div>
+        <div id="bloco-confirmar" hidden>
+          <div class="acoes">
+            <button id="btn-confirmar-import" class="btn btn-primario" disabled>Confirmar e gravar</button>
+          </div>
+        </div>
+        <div id="imp-resultado" style="margin-top:14px"></div>
+      </div>
+    </section>
+
+    <!-- USUÁRIOS -->
+    <section class="painel" id="painel-usuarios" hidden>
+      <div class="aviso">
+        Aprove os cadastros de coordenadores e professores e defina o papel de cada um.
+        O primeiro usuário do sistema já entra como coordenador automaticamente.
+      </div>
+      <div class="cartao">
+        <h2>Usuários <span class="contagem" id="contagem-usuarios"></span></h2>
+        <div id="lista-usuarios"></div>
+      </div>
+    </section>
+  </div>
+
+  </div><!-- fim .container -->
+
+  <!-- MODAL RESULTADO DE AVALIAÇÃO -->
+  <div id="modal-resultado" hidden style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
+       display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto">
+    <div style="background:var(--papel-alto);border-radius:var(--raio);padding:24px;max-width:640px;
+                width:100%;position:relative;box-shadow:var(--sombra)">
+      <button id="btn-fechar-modal" style="position:absolute;top:14px;right:14px;background:none;
+              border:none;cursor:pointer;font-size:1.2rem;color:var(--tinta-2)">✕</button>
+      <div id="modal-corpo"></div>
+    </div>
+  </div>
+
+  <!-- PAINEL AVALIAÇÕES (injetado no container antes do script principal) -->
+  <script>
+    // Injeta o painel de avaliações no container antes do módulo principal carregar.
+    document.addEventListener("DOMContentLoaded", () => {
+      const container = document.querySelector(".container");
+      const painel = document.createElement("section");
+      painel.className = "painel"; painel.id = "painel-avaliacoes"; painel.hidden = true;
+      painel.innerHTML = `
+        <div class="cartao">
+          <h2>Nova avaliação</h2>
+          <p class="dica">Crie avaliações anônimas para coletar feedback sobre as aulas. O quórum mínimo impede que o professor identifique quem respondeu.</p>
+          <form id="form-avaliacao">
+            <div class="grade duas">
+              <div><label for="av-titulo">Título *</label><input id="av-titulo" required placeholder="Ex.: Avaliação — Hebraico I" /></div>
+              <div><label for="av-turma">Turma (opcional)</label><select id="av-turma"></select></div>
+              <div><label for="av-quorum">Quórum mínimo de respostas</label><input id="av-quorum" type="number" min="1" value="5" /></div>
+            </div>
+            <div style="margin:14px 0">
+              <label>Perguntas</label>
+              <div id="lista-perguntas"></div>
+              <div class="acoes" style="margin-top:8px">
+                <button type="button" id="btn-add-likert"  class="btn btn-secundario" style="font-size:.85rem">+ Likert (1-5)</button>
+                <button type="button" id="btn-add-nps"     class="btn btn-secundario" style="font-size:.85rem">+ NPS (0-10)</button>
+                <button type="button" id="btn-add-dissertativa" class="btn btn-secundario" style="font-size:.85rem">+ Dissertativa</button>
+              </div>
+            </div>
+            <div class="acoes"><button type="submit" class="btn btn-primario">Criar avaliação</button></div>
+          </form>
+          <div id="link-avaliacao" style="margin-top:14px"></div>
+        </div>
+        <div class="cartao">
+          <h2>Avaliações criadas</h2>
+          <div id="lista-avaliacoes"></div>
+        </div>`;
+      container.appendChild(painel);
+    });
+  </script>
+
+  <script type="module" src="./js/app-admin.js"></script>
+</body>
+</html>

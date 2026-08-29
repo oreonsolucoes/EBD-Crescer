@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Ler QR · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <style>
+    /* A biblioteca injeta estilos; sobrescrevemos o visual para combinar com o sistema. */
+    #qr-reader { width: 100%; max-width: 380px; margin: 0 auto; border-radius: var(--raio); overflow: hidden; }
+    #qr-reader video { border-radius: var(--raio); }
+    /* esconde botões internos da lib que não queremos */
+    #qr-reader__dashboard_section_csr button { display: none; }
+    #qr-reader__header_message { display: none; }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Ler QR da turma</div>
+        <div class="sub">Igreja Batista da Cidade — IBC</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:480px;text-align:center">
+    <div class="cartao">
+      <h2>Aponte para o QR Code</h2>
+      <p class="dica">A câmera abrirá automaticamente. Aponte para o QR Code da sua turma para se matricular.</p>
+      <div id="qr-reader"></div>
+      <p id="status" class="dica" style="margin-top:12px">Iniciando câmera…</p>
+    </div>
+
+    <!-- Fallback manual (câmera negada ou desktop) -->
+    <div class="cartao" id="fallback" hidden>
+      <h2>Ou insira o código da turma</h2>
+      <form id="form-manual">
+        <div><label for="in-turma">Código da turma</label>
+          <input id="in-turma" required placeholder="Ex.: TURMA-HEB1" style="text-transform:uppercase" /></div>
+        <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Ir para matrícula</button></div>
+      </form>
+    </div>
+  </main>
+
+  <script type="module" src="./js/app-leitor.js"></script>
+</body>
+</html>

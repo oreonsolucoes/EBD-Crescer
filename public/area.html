@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Minha Área · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Minha Área</div>
+        <div class="sub">Escola Bíblica Dominical — IBC</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:600px">
+    <div class="cartao">
+      <h2>Consultar frequência</h2>
+      <p class="dica">Informe seu CPF para ver seu histórico de presença nas turmas.</p>
+      <form id="form-busca">
+        <div class="grade duas">
+          <div>
+            <label for="in-cpf">Seu CPF</label>
+            <input id="in-cpf" inputmode="numeric" required placeholder="000.000.000-00" />
+          </div>
+        </div>
+        <div class="acoes">
+          <button type="submit" class="btn btn-primario">Ver frequência</button>
+        </div>
+      </form>
+    </div>
+
+    <div id="resultado"></div>
+  </main>
+
+  <script type="module" src="./js/app-area.js"></script>
+</body>
+</html>

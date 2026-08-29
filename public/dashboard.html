@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <style>
+    .metricas { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:14px; margin-bottom:18px; }
+    .metrica  { background:var(--papel-alto); border:1px solid var(--linha); border-radius:var(--raio);
+                padding:16px; text-align:center; }
+    .metrica .num { font-family:var(--fonte-num); font-size:2rem; font-weight:700; display:block; }
+    .metrica .lbl { font-size:.75rem; color:var(--tinta-2); text-transform:uppercase; letter-spacing:.04em; }
+    .badge { display:inline-block; background:var(--alerta); color:#fff; border-radius:99px;
+             font-size:.72rem; font-weight:700; padding:1px 7px; margin-left:6px; vertical-align:middle; }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Dashboard</div>
+        <div class="sub" id="ola-coord">…</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;flex-wrap:wrap">
+        <a href="admin.html"  class="btn btn-secundario" style="padding:7px 12px;font-size:.85rem">Cadastros</a>
+        <button id="btn-sair" class="btn btn-secundario" style="padding:7px 12px;font-size:.85rem">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <p id="status" class="dica"></p>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:10px">
+      <button id="btn-atualizar" class="btn btn-secundario" style="padding:6px 12px;font-size:.85rem">Atualizar</button>
+    </div>
+
+    <!-- Métricas globais -->
+    <div class="metricas">
+      <div class="metrica"><span class="num" id="met-total">—</span><span class="lbl">Alunos</span></div>
+      <div class="metrica"><span class="num" id="met-ativos" style="color:var(--verde)">—</span><span class="lbl">Ativos</span></div>
+      <div class="metrica"><span class="num" id="met-inativos" style="color:var(--tinta-2)">—</span><span class="lbl">Inativos</span></div>
+      <div class="metrica"><span class="num" id="met-freq">—</span><span class="lbl">Freq. Média</span></div>
+    </div>
+
+    <!-- Gráfico de frequência por turma -->
+    <div class="cartao">
+      <h2>Frequência por turma</h2>
+      <canvas id="grafico-freq" style="width:100%;display:block"></canvas>
+    </div>
+
+    <!-- Tabela por turma -->
+    <div class="cartao">
+      <h2>Resumo por turma</h2>
+      <div id="tabela-turmas"></div>
+    </div>
+
+    <!-- Alertas de evasão -->
+    <div class="cartao">
+      <h2>Alertas de evasão <span class="badge" id="badge-alertas" hidden>0</span></h2>
+      <p class="dica">Alunos com 2 ou mais faltas consecutivas nas últimas aulas encerradas.</p>
+      <div id="lista-alertas"></div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app-dashboard.js"></script>
+</body>
+</html>

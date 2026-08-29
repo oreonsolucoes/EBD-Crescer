@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chamada · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Painel do Professor</div>
+        <div class="sub" id="ola-professor">…</div>
+      </div>
+      <button id="btn-sair" class="btn btn-secundario" style="margin-left:auto;padding:7px 12px;font-size:.85rem;">Sair</button>
+    </div>
+  </header>
+
+  <div class="container" style="max-width:760px">
+    <div class="cartao">
+      <div class="grade">
+        <div><label for="sel-turma">Turma</label><select id="sel-turma"></select></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px">
+        <div id="estado-chamada"></div>
+      </div>
+      <div class="acoes" style="margin-top:14px">
+        <button id="btn-abrir" class="btn btn-primario">Abrir chamada</button>
+        <button id="btn-encerrar" class="btn btn-secundario" hidden>Encerrar chamada</button>
+        <button id="btn-baixar-qr" class="btn btn-secundario">Baixar QR da turma</button>
+      </div>
+    </div>
+
+    <div class="cartao" style="text-align:center">
+      <h2>QR Code de matrícula da turma</h2>
+      <p class="dica">Este QR é <strong>fixo</strong>: imprima e cole na sala. Os alunos leem para se <strong>matricular</strong> na turma (a qualquer momento). A presença é você quem marca abaixo.</p>
+      <canvas id="qr-canvas" width="220" height="220" style="max-width:100%"></canvas>
+      <p class="dica mono" id="qr-url" style="word-break:break-all;margin-top:8px"></p>
+    </div>
+
+    <div class="cartao">
+      <h2>Chamada de hoje <span class="contagem" id="contador">0 / 0</span></h2>
+      <p class="dica">Abra a chamada e toque em cada aluno para marcar <strong>Presente</strong>. Todos começam como ausentes.</p>
+      <div class="acoes" style="margin-bottom:10px">
+        <button id="btn-atualizar" class="btn btn-secundario" style="padding:6px 12px;font-size:.85rem">Atualizar lista de matriculados</button>
+      </div>
+      <div class="tabela-wrap"><table>
+        <thead><tr><th>Código</th><th>Nome</th><th style="text-align:center">Presença</th></tr></thead>
+        <tbody id="lista-chamada"><tr><td colspan="3" class="vazio">Selecione uma turma.</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/app-professor.js"></script>
+</body>
+</html>

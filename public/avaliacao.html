@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Avaliação · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo" id="titulo-aval">Avaliação</div>
+        <div class="sub">Escola Bíblica Dominical — IBC</div>
+      </div>
+    </div>
+  </header>
+  <main class="container" style="max-width:600px">
+    <div id="erro"></div>
+    <div class="aviso" style="margin-bottom:14px">
+      Suas respostas são <strong>completamente anônimas</strong>. O professor não saberá quem respondeu o quê.
+    </div>
+
+    <!-- Passo 1: CPF -->
+    <section class="cartao" id="passo-cpf" hidden>
+      <h2>Identificação</h2>
+      <p class="dica">Informe seu CPF para acessar a avaliação. Ele não é associado às suas respostas.</p>
+      <form id="form-cpf">
+        <div><label for="in-cpf">Seu CPF</label>
+          <input id="in-cpf" inputmode="numeric" required placeholder="000.000.000-00" /></div>
+        <div class="acoes"><button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Continuar</button></div>
+      </form>
+    </section>
+
+    <!-- Passo 2: formulário -->
+    <section class="cartao" id="passo-form" hidden>
+      <h2>Suas respostas</h2>
+      <form id="form-aval">
+        <div id="perguntas"></div>
+        <div class="acoes" style="margin-top:20px">
+          <button type="submit" class="btn btn-primario" style="width:100%;justify-content:center">Enviar avaliação</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Passo 3: confirmação -->
+    <section class="cartao" id="passo-ok" hidden style="text-align:center">
+      <div style="font-size:2.4rem">✓</div>
+      <h2 style="color:var(--verde)">Avaliação enviada!</h2>
+      <p class="dica">Obrigado pela sua participação. Suas respostas são anônimas e ajudam a melhorar as aulas.</p>
+    </section>
+  </main>
+  <script type="module" src="./js/app-avaliacao.js"></script>
+</body>
+</html>

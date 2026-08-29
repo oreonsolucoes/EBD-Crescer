@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Cartão Digital · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700&family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <style>
+    .card-visual {
+      background: var(--indigo);
+      border-radius: 16px;
+      padding: 28px 24px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+      border-left: 6px solid var(--ambar);
+      border-bottom: 6px solid var(--ambar);
+      max-width: 520px;
+    }
+    .card-visual::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 40px,
+        rgba(255,255,255,.02) 40px, rgba(255,255,255,.02) 80px
+      );
+    }
+    .card-topo { display: flex; align-items: flex-start; gap: 16px; position: relative; }
+    .card-selo { width: 48px; height: 48px; border: 2px solid var(--ambar); border-radius: 10px;
+      display: grid; place-items: center; font-family: var(--fonte-num); font-weight: 700;
+      font-size: .75rem; color: var(--ambar); flex: none; }
+    .card-inst { font-size: .8rem; opacity: .7; }
+    .card-nome { font-size: 1.4rem; font-weight: 700; margin: 18px 0 4px; position: relative; }
+    .card-cod  { font-family: var(--fonte-num); color: var(--ambar); font-size: 1.1rem; font-weight: 700; }
+    .card-qr-wrap { position: absolute; right: 24px; bottom: 24px; background: #fff;
+      padding: 8px; border-radius: 10px; }
+    .card-qr-wrap img { width: 100px; height: 100px; display: block; }
+    .card-foto-wrap { position: absolute; right: 150px; bottom: 24px; }
+    .card-foto-wrap img { width: 80px; height: 80px; object-fit: cover; border-radius: 50%;
+      border: 3px solid var(--ambar); }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <div class="selo">EBD</div>
+      <div>
+        <div class="titulo">Cartão Digital</div>
+        <div class="sub">Escola Bíblica Dominical — IBC</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container" style="max-width:600px">
+    <div id="erro"></div>
+
+    <div id="cartao" hidden>
+      <!-- Preview visual do cartão -->
+      <div class="card-visual" style="margin-bottom:20px">
+        <div class="card-topo">
+          <div class="card-selo">EBD</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem">Escola Bíblica Dominical</div>
+            <div class="card-inst">Igreja Batista da Cidade — IBC</div>
+          </div>
+        </div>
+        <div class="card-nome" id="card-nome">—</div>
+        <div class="card-cod"  id="card-codigo">—</div>
+        <p style="font-size:.7rem;opacity:.5;margin:8px 0 80px;position:relative">CARTÃO DE IDENTIFICAÇÃO DO ALUNO</p>
+        <!-- foto (opcional) -->
+        <div class="card-foto-wrap" id="wrap-foto" hidden>
+          <img id="card-foto" src="" alt="Foto do aluno" hidden />
+        </div>
+        <!-- QR do aluno -->
+        <div class="card-qr-wrap">
+          <img id="card-qr" src="" alt="QR do aluno" />
+        </div>
+      </div>
+
+      <!-- Controles -->
+      <div class="cartao">
+        <h2>Personalizar e baixar</h2>
+        <div class="grade duas">
+          <div>
+            <label for="input-foto">Foto do aluno (opcional)</label>
+            <input id="input-foto" type="file" accept="image/*" style="padding:8px" />
+            <p class="dica">A foto fica só na pré-visualização local (não é enviada ao servidor neste momento).</p>
+          </div>
+        </div>
+        <div class="acoes">
+          <button id="btn-baixar" class="btn btn-primario">Baixar cartão (PNG)</button>
+          <a id="btn-voltar" href="admin.html" class="btn btn-secundario">Voltar</a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module" src="./js/app-cartao.js"></script>
+</body>
+</html>
