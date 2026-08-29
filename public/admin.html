@@ -160,13 +160,13 @@
         <div id="lista-usuarios"></div>
       </div>
     </section>
-  </div>
-
   </div><!-- fim .container -->
 
   <!-- MODAL RESULTADO DE AVALIAÇÃO -->
-  <div id="modal-resultado" hidden style="position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
-       display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto">
+  <!-- NOTA: não usar display:flex inline junto com o atributo hidden,
+       pois o hidden é sobrescrito pelo display inline. Usamos display:none via CSS. -->
+  <div id="modal-resultado" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+       z-index:100;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto">
     <div style="background:var(--papel-alto);border-radius:var(--raio);padding:24px;max-width:640px;
                 width:100%;position:relative;box-shadow:var(--sombra)">
       <button id="btn-fechar-modal" style="position:absolute;top:14px;right:14px;background:none;

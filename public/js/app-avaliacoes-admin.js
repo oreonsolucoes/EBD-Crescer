@@ -92,7 +92,7 @@ export async function renderListaAvaliacoes() {
 async function verResultado(id) {
   const modal = $("#modal-resultado");
   const corpo = $("#modal-corpo");
-  modal.hidden = false;
+  modal.style.display = "flex";
   corpo.innerHTML = '<p class="vazio">Carregando…</p>';
   try {
     const r = await resultadoAvaliacao(id);
@@ -126,7 +126,7 @@ async function verResultado(id) {
 }
 
 // Fecha modal
-const fechar = () => { document.getElementById("modal-resultado").hidden = true; };
+const fechar = () => { document.getElementById("modal-resultado").style.display = "none"; };
 document.getElementById("btn-fechar-modal")?.addEventListener("click", fechar);
 document.getElementById("modal-resultado")?.addEventListener("click", (e) => { if (e.target === e.currentTarget) fechar(); });
 
