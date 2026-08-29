@@ -803,7 +803,7 @@ export function calcularAulas(dataInicio, semanas, diaSemana) {
 
 // Cria turma com prazo definido por data de início + nº de semanas + dia da semana.
 export async function criarTurmaComPrazo({
-  codigo, prefixo, nome, professorCodigo, diaSemana, dataInicio, semanas, horario
+  codigo, prefixo, nome, professoresCodigos, diaSemana, dataInicio, semanas, horario
 }) {
   let id;
   if (prefixo && !codigo) {
@@ -819,10 +819,16 @@ export async function criarTurmaComPrazo({
   const aulas = calcularAulas(dataInicio, Number(semanas), Number(diaSemana));
   const dataFim = aulas[aulas.length - 1];
 
+  // professoresCodigos: array de códigos PROF-XXX
+  const profs = Array.isArray(professoresCodigos)
+    ? professoresCodigos.filter(Boolean)
+    : professoresCodigos ? [professoresCodigos] : [];
+
   await setDoc(ref, {
     codigo: id,
     nome: norm.nome(nome),
-    professorCodigo: professorCodigo || "",
+    professoresCodigos: profs,
+    professorCodigo: profs[0] || "", // compatibilidade retroativa
     diaSemana: Number(diaSemana),
     dataInicio,
     dataFim,
