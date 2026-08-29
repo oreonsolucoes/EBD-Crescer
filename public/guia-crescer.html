@@ -232,7 +232,7 @@ h2.section-title {
   width: 100%; padding: 6px 8px; border: 1px solid var(--linha);
   border-radius: 6px; font-size: .75rem; background: #fff; color: var(--azul);
 }
-.sim-field.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sim-field.grid2 { display: grid; grid-template-columns: 1fr; gap: 8px; } @media (min-width: 480px) { .sim-field.grid2 { grid-template-columns: 1fr 1fr; } }
 .sim-btn {
   background: var(--ambar); color: var(--azul);
   border: none; border-radius: 6px; padding: 8px 14px;
@@ -352,6 +352,39 @@ footer {
   padding: 24px 20px; text-align: center;
   font-size: .78rem; color: var(--cinza);
 }
+
+  /* ── GRIDS RESPONSIVOS ───────────────────────────────────── */
+  .grid-2col {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin: 20px 0;
+  }
+  @media (min-width: 560px) {
+    .grid-2col { grid-template-columns: 1fr 1fr; }
+  }
+  .grid-metricas {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  @media (min-width: 480px) {
+    .grid-metricas { grid-template-columns: repeat(4, 1fr); }
+  }
+  /* fluxo wraps no mobile */
+  .fluxo { flex-wrap: wrap; justify-content: center; }
+  /* sim-row overflow no mobile */
+  .sim-row { flex-wrap: wrap; }
+  /* mock-bar url-bar some no mobile pequeno */
+  @media (max-width: 400px) {
+    .url-bar { display: none; }
+    .sim-btns { display: none; }
+    .hero h1 { font-size: 1.5rem; }
+    .hero { padding: 24px 18px; }
+    .content { padding: 16px 12px; }
+    h2.section-title { font-size: 1.3rem; }
+  }
 </style>
 </head>
 <body>
@@ -627,11 +660,11 @@ footer {
         <div class="mock-body">
           <div style="font-size:.75rem;font-weight:700;margin-bottom:8px;color:var(--cinza)">AGUARDANDO APROVAÇÃO</div>
           <div class="sim-lista">
-            <div class="sim-row header"><span style="flex:1">Nome</span><span style="min-width:120px">E-mail</span><span style="min-width:100px">Papel</span><span></span></div>
+            <div class="sim-row header"><span style="flex:1">Nome</span><span style="flex:1">E-mail</span><span style="flex:1">Papel</span><span></span></div>
             <div class="sim-row">
               <span style="flex:1">Daniel Alves</span>
-              <span style="min-width:120px;font-size:.65rem">daniel@ibc.com</span>
-              <span style="min-width:100px">
+              <span style="font-size:.65rem">daniel@ibc.com</span>
+              <span style="flex:1">
                 <select style="font-size:.65rem;padding:2px 4px;border:1px solid var(--linha);border-radius:4px">
                   <option>Professor</option>
                   <option>Coordenador</option>
@@ -665,7 +698,7 @@ footer {
       <h2 class="section-title">O QR Code de cada turma</h2>
       <p class="section-desc">Cada turma tem um QR Code fixo — o mesmo para todas as aulas. Imprima uma vez e cole na parede da sala.</p>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0">
+      <div class="grid-2col">
         <div class="mock-frame">
           <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/professor.html</div></div>
           <div class="mock-body">
@@ -756,7 +789,7 @@ footer {
       <h2 class="section-title">Como o aluno se matricula</h2>
       <p class="section-desc">O aluno não precisa de conta. Basta ler o QR Code e digitar o CPF — leva menos de 30 segundos.</p>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:20px 0">
+      <div class="grid-2col">
         <div>
           <h3 style="font-size:.85rem;font-weight:700;margin-bottom:10px;color:var(--cinza)">✅ Aluno já tem cadastro</h3>
           <div class="mock-frame">
@@ -849,7 +882,7 @@ footer {
       <div class="mock-frame">
         <div class="mock-bar"><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div><div class="url-bar">…/dashboard.html</div></div>
         <div class="mock-body">
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px">
+          <div class="grid-metricas">
             <div style="background:var(--papel);border:1px solid var(--linha);border-radius:8px;padding:10px;text-align:center">
               <div style="font-size:1.4rem;font-weight:800;font-family:monospace">22</div>
               <div style="font-size:.62rem;color:var(--cinza);text-transform:uppercase;letter-spacing:.04em">Alunos</div>
