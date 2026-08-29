@@ -244,10 +244,13 @@ async function renderProfessores() {
 // TURMAS
 // =============================================================================
 async function preencherSelectsTurma() {
-  const sel = $("#tu-professor");
+  const sel = $("#tu-professores");
   const profs = await listarProfessores().catch(() => []);
-  sel.innerHTML = '<option value="">— sem professor —</option>' +
-    profs.map((p) => `<option value="${esc(p.codigo)}">${esc(p.nome)} (${esc(p.codigo)})</option>`).join("");
+  if (sel) {
+    sel.innerHTML = profs.map((p) =>
+      `<option value="${esc(p.codigo)}">${esc(p.nome)} (${esc(p.codigo)})</option>`
+    ).join("");
+  }
 }
 
 // Pré-visualiza o próximo código quando o prefixo é digitado
@@ -293,11 +296,13 @@ $("#form-turma").addEventListener("submit", async (e) => {
     const diaSemana = parseInt($("#tu-dia-semana").value);
     if (!dataInicio) throw new Error("Informe a data de início.");
     if (!semanas || semanas < 1) throw new Error("Informe o número de semanas.");
+    const professoresCodigos = [...($("#tu-professores")?.selectedOptions || [])]
+      .map(o => o.value).filter(Boolean);
     const r = await criarTurmaComPrazo({
       prefixo: prefixo || "",
       codigo: codManual || "",
       nome: $("#tu-nome").value,
-      professorCodigo: $("#tu-professor").value,
+      professoresCodigos,
       diaSemana,
       dataInicio,
       semanas,
@@ -325,7 +330,9 @@ async function renderTurmas() {
           <tr>
             <td class="mono">${esc(t.codigo)}</td>
             <td>${esc(t.nome)}</td>
-            <td>${esc(t.professorCodigo) || "—"}</td>
+            <td>${Array.isArray(t.professoresCodigos) && t.professoresCodigos.length
+              ? esc(t.professoresCodigos.join(", "))
+              : esc(t.professorCodigo) || "—"}</td>
             <td>${esc(t.horario) || "—"}</td>
             <td style="font-size:.8rem">${t.dataInicio ? `${t.dataInicio} → ${t.dataFim}` : "—"}</td>
             <td style="text-align:center">${t.totalAulasPrevistas || "—"}</td>
