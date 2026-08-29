@@ -6,7 +6,7 @@ import { CONFIG_PENDENTE } from "./firebase-config.js";
 import {
   criarAluno, listarAlunos,
   criarProfessor, listarProfessores,
-  criarTurma, listarTurmas,
+  criarTurma, listarTurmas, gerarProximoCodigoTurma,
   criarMatricula, listarMatriculas,
   buscarAluno,
 } from "./db.js";
@@ -55,12 +55,11 @@ if (CONFIG_PENDENTE) {
 
 // ---------- Navegação por abas ----------
 $$(".aba").forEach((aba) => {
-  aba.addEventListener("click", async () => {
+  aba.addEventListener("click", () => {
     $$(".aba").forEach((a) => a.setAttribute("aria-selected", "false"));
     $$(".painel").forEach((p) => (p.hidden = true));
     aba.setAttribute("aria-selected", "true");
-    const painel = $("#" + aba.dataset.painel);
-    if (painel) painel.hidden = false;
+    $("#" + aba.dataset.painel).hidden = false;
     if (aba.dataset.painel === "painel-alunos") renderAlunos();
     if (aba.dataset.painel === "painel-professores") renderProfessores();
     if (aba.dataset.painel === "painel-turmas") { renderTurmas(); preencherSelectsTurma(); }
@@ -68,6 +67,7 @@ $$(".aba").forEach((aba) => {
     if (aba.dataset.painel === "painel-importar") preencherSelectTurmaImport();
     if (aba.dataset.painel === "painel-usuarios") renderUsuarios();
     if (aba.dataset.painel === "painel-avaliacoes") {
+      // importa módulo de avaliações só quando necessário (lazy)
       const { renderListaAvaliacoes } = await import("./app-avaliacoes-admin.js");
       renderListaAvaliacoes();
     }
@@ -167,13 +167,29 @@ async function preencherSelectsTurma() {
     profs.map((p) => `<option value="${esc(p.codigo)}">${esc(p.nome)} (${esc(p.codigo)})</option>`).join("");
 }
 
+// Pré-visualiza o próximo código quando o prefixo é digitado
+$("#tu-prefixo")?.addEventListener("input", async (e) => {
+  const p = e.target.value.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  const preview = $("#tu-codigo-preview");
+  if (!preview) return;
+  if (!p) { preview.textContent = ""; return; }
+  try {
+    const prox = await gerarProximoCodigoTurma(p);
+    preview.textContent = `Código gerado: ${prox}`;
+    preview.style.color = "var(--verde)";
+  } catch { preview.textContent = ""; }
+});
+
 $("#form-turma").addEventListener("submit", async (e) => {
   e.preventDefault();
   const btn = $("#form-turma button[type=submit]");
   btn.disabled = true;
   try {
+    const prefixo = $("#tu-prefixo")?.value?.trim();
+    const codManual = $("#tu-codigo")?.value?.trim();
     const id = await criarTurma({
-      codigo: $("#tu-codigo").value,
+      prefixo: prefixo || "",
+      codigo: codManual || "",
       nome: $("#tu-nome").value,
       professorCodigo: $("#tu-professor").value,
       dia: $("#tu-dia").value,
@@ -181,6 +197,7 @@ $("#form-turma").addEventListener("submit", async (e) => {
     });
     toast(`Turma criada: ${id}`);
     e.target.reset();
+    if ($("#tu-codigo-preview")) $("#tu-codigo-preview").textContent = "";
     renderTurmas();
   } catch (err) { toast("Erro: " + err.message, "err"); }
   finally { btn.disabled = false; }

@@ -77,11 +77,20 @@
     <section class="painel" id="painel-turmas" hidden>
       <div class="cartao">
         <h2>Criar turma</h2>
-        <p class="dica">Defina um código curto e único, ex.: <code>TURMA-HEB1</code>.</p>
+        <p class="dica">Digite o <strong>prefixo da matéria</strong> (ex.: <code>HEB</code>, <code>GRE</code>, <code>DOC</code>) e o código sequencial é gerado automaticamente.</p>
         <form id="form-turma">
           <div class="grade duas">
-            <div><label for="tu-codigo">Código *</label><input id="tu-codigo" required placeholder="TURMA-HEB1" style="text-transform:uppercase" /></div>
-            <div><label for="tu-nome">Nome *</label><input id="tu-nome" required placeholder="Hebraico I" /></div>
+            <div>
+              <label for="tu-prefixo">Prefixo da matéria *</label>
+              <input id="tu-prefixo" placeholder="Ex.: HEB, GRE, DOC" style="text-transform:uppercase" />
+              <p class="dica" id="tu-codigo-preview" style="margin-top:4px;font-weight:600"></p>
+            </div>
+            <div>
+              <label for="tu-codigo">Ou código manual (opcional)</label>
+              <input id="tu-codigo" placeholder="Deixe vazio para usar o prefixo" style="text-transform:uppercase" />
+              <p class="dica">Preencha só se quiser substituir o código gerado.</p>
+            </div>
+            <div><label for="tu-nome">Nome da turma *</label><input id="tu-nome" required placeholder="Ex.: Hebraico I" /></div>
             <div><label for="tu-professor">Professor</label><select id="tu-professor"></select></div>
             <div><label for="tu-dia">Dia</label><input id="tu-dia" placeholder="Domingo" /></div>
             <div><label for="tu-horario">Horário</label><input id="tu-horario" placeholder="09:00" /></div>
@@ -163,8 +172,6 @@
   </div><!-- fim .container -->
 
   <!-- MODAL RESULTADO DE AVALIAÇÃO -->
-  <!-- NOTA: não usar display:flex inline junto com o atributo hidden,
-       pois o hidden é sobrescrito pelo display inline. Usamos display:none via CSS. -->
   <div id="modal-resultado" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
        z-index:100;align-items:flex-start;justify-content:center;padding:24px;overflow-y:auto">
     <div style="background:var(--papel-alto);border-radius:var(--raio);padding:24px;max-width:640px;

@@ -30,7 +30,12 @@ import {
 // -----------------------------------------------------------------------------
 export const norm = {
   cpf: (v) => (v || "").replace(/\D/g, ""),
-  fone: (v) => (v || "").replace(/\D/g, ""),
+  fone: (v) => {
+    let f = (v || "").replace(/\D/g, "");
+    // Remove prefixo internacional 55 quando resulta em número longo (>11 dígitos)
+    if (f.startsWith("55") && f.length > 11) f = f.slice(2);
+    return f;
+  },
   email: (v) => (v || "").trim().toLowerCase(),
   nome: (v) => (v || "").trim().replace(/\s+/g, " "),
 };
@@ -126,9 +131,33 @@ export async function listarProfessores() {
 // -----------------------------------------------------------------------------
 // TURMAS
 // -----------------------------------------------------------------------------
-export async function criarTurma({ codigo, nome, professorCodigo, dia, horario }) {
-  const id = (codigo || "").trim().toUpperCase();
-  if (!id) throw new Error("Código da turma é obrigatório.");
+
+// Gera o próximo código sequencial para um prefixo de turma.
+// Ex.: prefixo "HEB" → busca todas as turmas HEB-XXX e retorna HEB-004 se o maior for 003.
+export async function gerarProximoCodigoTurma(prefixo) {
+  const p = (prefixo || "").trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  if (!p) throw new Error("Prefixo inválido.");
+  const snap = await getDocs(collection(db, "turmas"));
+  const re = new RegExp(`^${p}-(\\d+)$`);
+  let maior = 0;
+  snap.docs.forEach((d) => {
+    const m = (d.id || "").match(re);
+    if (m) maior = Math.max(maior, parseInt(m[1], 10));
+  });
+  const proximo = String(maior + 1).padStart(3, "0");
+  return `${p}-${proximo}`;
+}
+
+export async function criarTurma({ codigo, prefixo, nome, professorCodigo, dia, horario }) {
+  // Se vier prefixo (ex.: "HEB"), gera o código sequencial automaticamente.
+  // Se vier código manual, usa ele diretamente (retrocompatível).
+  let id;
+  if (prefixo && !codigo) {
+    id = await gerarProximoCodigoTurma(prefixo);
+  } else {
+    id = (codigo || "").trim().toUpperCase();
+    if (!id) throw new Error("Informe o código ou o prefixo da turma.");
+  }
   const ref = doc(db, "turmas", id);
   const existe = await getDoc(ref);
   if (existe.exists()) throw new Error(`Turma ${id} já existe.`);

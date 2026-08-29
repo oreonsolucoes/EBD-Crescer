@@ -15,11 +15,14 @@ import {
 } from "./db.js";
 
 // Cabeçalhos aceitos no arquivo (tolerante a acento/caixa).
+// Suporta o formato padrão do sistema E o formato exportado pela Sympla.
 const MAPA_COLUNAS = {
-  nome: ["nome", "aluno", "name"],
-  telefone: ["telefone", "celular", "fone", "phone", "whatsapp"],
-  email: ["email", "e-mail", "mail"],
-  cpf: ["cpf", "documento"],
+  nome:     ["nome", "aluno", "name", "nome completo", "nomecompleto", "participante"],
+  telefone: ["telefone", "celular", "fone", "phone", "whatsapp", "cel",
+             "celular do participante", "celular do comprador"],
+  email:    ["email", "e-mail", "mail",
+             "e-mail do participante", "e-mail do comprador"],
+  cpf:      ["cpf", "documento", "cpf/cnpj"],
 };
 
 function achaCampo(cabecalho) {
