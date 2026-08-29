@@ -780,3 +780,160 @@ export async function resultadoAvaliacao(avaliacaoId) {
 
   return { liberado: true, titulo: aval.titulo, respostas: nRespostas, perguntas: compilado };
 }
+
+// =============================================================================
+// TURMAS COM PRAZO + EDIÇÃO/EXCLUSÃO DE ALUNOS E MATRÍCULAS
+// =============================================================================
+
+// Calcula as datas de todas as aulas de uma turma.
+// diaSemana: 0=domingo, 1=segunda ... 6=sábado
+export function calcularAulas(dataInicio, semanas, diaSemana) {
+  const inicio = new Date(dataInicio + "T12:00:00");
+  const diff = (diaSemana - inicio.getDay() + 7) % 7;
+  const primeira = new Date(inicio);
+  primeira.setDate(primeira.getDate() + diff);
+  const aulas = [];
+  for (let i = 0; i < semanas; i++) {
+    const d = new Date(primeira);
+    d.setDate(d.getDate() + i * 7);
+    aulas.push(d.toISOString().slice(0, 10));
+  }
+  return aulas;
+}
+
+// Cria turma com prazo definido por data de início + nº de semanas + dia da semana.
+export async function criarTurmaComPrazo({
+  codigo, prefixo, nome, professorCodigo, diaSemana, dataInicio, semanas, horario
+}) {
+  let id;
+  if (prefixo && !codigo) {
+    id = await gerarProximoCodigoTurma(prefixo);
+  } else {
+    id = (codigo || "").trim().toUpperCase();
+    if (!id) throw new Error("Informe o código ou o prefixo da turma.");
+  }
+  const ref = doc(db, "turmas", id);
+  const existe = await getDoc(ref);
+  if (existe.exists()) throw new Error(`Turma ${id} já existe.`);
+
+  const aulas = calcularAulas(dataInicio, Number(semanas), Number(diaSemana));
+  const dataFim = aulas[aulas.length - 1];
+
+  await setDoc(ref, {
+    codigo: id,
+    nome: norm.nome(nome),
+    professorCodigo: professorCodigo || "",
+    diaSemana: Number(diaSemana),
+    dataInicio,
+    dataFim,
+    semanas: Number(semanas),
+    horario: horario || "",
+    totalAulasPrevistas: aulas.length,
+    status: "ativa",
+  });
+  return { id, dataFim, totalAulasPrevistas: aulas.length };
+}
+
+// Verifica e encerra turmas vencidas (chama ao abrir o painel).
+export async function encerrarTurmasVencidas() {
+  const snap = await getDocs(query(collection(db, "turmas"), where("status", "==", "ativa")));
+  const hoje = new Date().toISOString().slice(0, 10);
+  const encerradas = [];
+  for (const d of snap.docs) {
+    const t = d.data();
+    if (t.dataFim && t.dataFim < hoje) {
+      await updateDoc(doc(db, "turmas", t.codigo), { status: "encerrada" });
+      encerradas.push(t.codigo);
+    }
+  }
+  return encerradas;
+}
+
+// Editar turma
+export async function editarTurma(codigo, dados) {
+  const ref = doc(db, "turmas", codigo);
+  await updateDoc(ref, {
+    nome: dados.nome ? norm.nome(dados.nome) : undefined,
+    professorCodigo: dados.professorCodigo ?? undefined,
+    horario: dados.horario ?? undefined,
+    status: dados.status ?? undefined,
+  });
+}
+
+// ── EDIÇÃO DE ALUNOS ──────────────────────────────────────────────────────────
+
+export async function editarAluno(codigo, dados) {
+  await updateDoc(doc(db, "alunos", codigo), {
+    nome:      dados.nome      ? norm.nome(dados.nome)      : undefined,
+    telefone:  dados.telefone  !== undefined ? dados.telefone  : undefined,
+    email:     dados.email     !== undefined ? norm.email(dados.email) : undefined,
+    cpf:       dados.cpf       !== undefined ? dados.cpf       : undefined,
+  });
+}
+
+// Exclui aluno permanentemente: remove aluno + matrículas + presenças
+export async function excluirAluno(codigo) {
+  const batch = writeBatch(db);
+
+  // Remove matrículas
+  const mats = await getDocs(query(collection(db, "matriculas"), where("alunoCodigo", "==", codigo)));
+  mats.docs.forEach((d) => batch.delete(d.ref));
+
+  // Remove presenças
+  const pres = await getDocs(query(collection(db, "presencas"), where("alunoCodigo", "==", codigo)));
+  pres.docs.forEach((d) => batch.delete(d.ref));
+
+  // Remove o aluno
+  batch.delete(doc(db, "alunos", codigo));
+
+  await batch.commit();
+}
+
+// ── EDIÇÃO DE MATRÍCULAS ──────────────────────────────────────────────────────
+
+// Tranca matrícula (mantém histórico de presença)
+export async function trancarMatricula(alunoCodigo, turmaCodigo) {
+  await updateDoc(doc(db, "matriculas", idMatricula(alunoCodigo, turmaCodigo)), {
+    status: "trancada",
+    dataTrancamento: serverTimestamp(),
+  });
+}
+
+// Reativa matrícula trancada
+export async function reativarMatricula(alunoCodigo, turmaCodigo) {
+  await updateDoc(doc(db, "matriculas", idMatricula(alunoCodigo, turmaCodigo)), {
+    status: "ativa",
+    dataTrancamento: null,
+  });
+}
+
+// Exclui matrícula permanentemente + todas as presenças do aluno nessa turma
+export async function excluirMatricula(alunoCodigo, turmaCodigo) {
+  const batch = writeBatch(db);
+
+  // Remove presenças do aluno nessa turma
+  const pres = await getDocs(query(
+    collection(db, "presencas"),
+    where("alunoCodigo", "==", alunoCodigo),
+    where("turmaCodigo", "==", turmaCodigo)
+  ));
+  pres.docs.forEach((d) => batch.delete(d.ref));
+
+  // Remove a matrícula
+  batch.delete(doc(db, "matriculas", idMatricula(alunoCodigo, turmaCodigo)));
+
+  await batch.commit();
+}
+
+// Lista matrículas de um aluno com dados da turma
+export async function matriculasDoAluno(alunoCodigo) {
+  const q = query(collection(db, "matriculas"), where("alunoCodigo", "==", alunoCodigo));
+  const snap = await getDocs(q);
+  const mats = snap.docs.map((d) => d.data());
+  const resultado = [];
+  for (const m of mats) {
+    const tSnap = await getDoc(doc(db, "turmas", m.turmaCodigo));
+    resultado.push({ ...m, turma: tSnap.exists() ? tSnap.data() : null });
+  }
+  return resultado;
+}
