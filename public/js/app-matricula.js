@@ -5,6 +5,7 @@
 import {
   consultarParaMatricula, confirmarMatriculaAluno, cadastroRapidoEMatricula,
 } from "./db.js";
+import { tourAluno } from "./tour.js";
 
 const $ = (s) => document.querySelector(s);
 const params = new URLSearchParams(location.search);
@@ -110,3 +111,4 @@ function mostrarPronto(aluno, turma, titulo) {
 }
 
 iniciar();
+setTimeout(() => tourAluno(), 600);
