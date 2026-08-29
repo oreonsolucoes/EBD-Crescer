@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Testes · EBD IBC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/main.css" />
+  <style>
+    .suite { margin-bottom: 24px; }
+    .suite h2 { font-size: 1rem; border-bottom: 2px solid var(--ambar); padding-bottom: 6px; margin-bottom: 12px; }
+    .resultado { font-family: var(--fonte-num); font-size: .82rem; padding: 6px 10px;
+                 border-radius: 6px; margin: 4px 0; display: flex; gap: 10px; align-items: flex-start; }
+    .resultado.ok   { background: var(--verde-bg); color: var(--verde); }
+    .resultado.fail { background: #f6dede; color: var(--erro); }
+    .resultado.warn { background: #fbf3e3; color: var(--ambar-esc); }
+    .resultado.info { background: var(--azul-bg); color: var(--indigo); }
+    .resultado .icone { flex: none; font-size: 1rem; }
+    .resultado .detalhe { word-break: break-all; }
+    #resumo { font-size: 1.1rem; font-weight: 700; padding: 14px; border-radius: 10px;
+              text-align: center; margin-bottom: 20px; }
+    #resumo.ok   { background: var(--verde-bg); color: var(--verde); }
+    #resumo.fail { background: #f6dede; color: var(--erro); }
+    .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--linha);
+               border-top-color: var(--indigo); border-radius: 50%; animation: spin .7s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    pre { background: #f0f0f0; padding: 8px; border-radius: 6px; font-size: .75rem;
+          overflow-x: auto; margin: 4px 0; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <header class="topo">
+    <div class="barra">
+      <img src="./img/logo-header.png" alt="Crescer" class="logo-header"
+           onerror="this.outerHTML='<div class=\'selo\'>EBD</div>'">
+      <div>
+        <div class="titulo">Suite de Testes</div>
+        <div class="sub">Validação do Sistema EBD IBC</div>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px">
+        <button id="btn-rodar" class="btn btn-primario">▶ Rodar todos</button>
+        <a href="index.html" class="btn btn-secundario">Voltar</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="container" style="max-width:860px">
+    <div id="resumo" class="info">Clique em "Rodar todos" para iniciar os testes.</div>
+
+    <div id="suites"></div>
+  </div>
+
+  <script type="module">
+    import { db, CONFIG_PENDENTE } from "./js/firebase-config.js";
+    import { norm, formatCodigoAluno, gerarProximoCodigoAluno,
+             criarAluno, buscarAluno, listarAlunos,
+             criarTurma, listarTurmas, gerarProximoCodigoTurma,
+             criarMatricula, idMatricula,
+             consultarParaMatricula, cadastroRapidoEMatricula,
+             abrirChamada, encerrarChamada, sessaoAbertaDaTurma,
+             marcarPresenca, ouvirPresencas,
+             historicoFrequencia } from "./js/db.js";
+    import { auth, perfilDoUsuario } from "./js/auth.js";
+    import { urlMatriculaTurma } from "./js/scanner.js";
+    import { lerArquivo, validarLinha, preVisualizar } from "./js/importador.js";
+
+    // ── helpers de render ──────────────────────────────────────────────────────
+    const suites = document.getElementById("suites");
+    const resumoEl = document.getElementById("resumo");
+    let totalOk = 0, totalFail = 0, totalWarn = 0;
+
+    function criarSuite(titulo) {
+      const div = document.createElement("div");
+      div.className = "suite cartao";
+      div.innerHTML = `<h2>${titulo}</h2><div class="itens"></div>`;
+      suites.appendChild(div);
+      return div.querySelector(".itens");
+    }
+
+    function log(container, tipo, icone, msg, detalhe = "") {
+      const d = document.createElement("div");
+      d.className = `resultado ${tipo}`;
+      d.innerHTML = `<span class="icone">${icone}</span>
+        <span class="detalhe"><strong>${msg}</strong>${detalhe ? `<br><small>${detalhe}</small>` : ""}</span>`;
+      container.appendChild(d);
+      if (tipo === "ok")   totalOk++;
+      if (tipo === "fail") totalFail++;
+      if (tipo === "warn") totalWarn++;
+    }
+
+    function ok(c, msg, det)   { log(c, "ok",   "✓", msg, det); }
+    function fail(c, msg, det) { log(c, "fail", "✗", msg, det); }
+    function warn(c, msg, det) { log(c, "warn", "⚠", msg, det); }
+    function info(c, msg, det) { log(c, "info", "ℹ", msg, det); }
+
+    async function testar(container, descricao, fn) {
+      try {
+        const resultado = await fn();
+        ok(container, descricao, resultado !== undefined ? String(resultado).slice(0, 120) : "");
+      } catch (e) {
+        fail(container, descricao, e.message || String(e));
+      }
+    }
+
+    // ── SUITES ─────────────────────────────────────────────────────────────────
+
+    async function testeConfig(c) {
+      CONFIG_PENDENTE
+        ? fail(c, "Firebase configurado", "Ainda com placeholder — edite firebase-config.js")
+        : ok(c, "Firebase configurado", "Credenciais presentes");
+
+      auth
+        ? ok(c, "Firebase Auth inicializado")
+        : fail(c, "Firebase Auth inicializado");
+
+      db
+        ? ok(c, "Firestore inicializado")
+        : fail(c, "Firestore inicializado");
+
+      const user = auth.currentUser;
+      user
+        ? ok(c, "Usuário autenticado", `${user.email} (${user.uid})`)
+        : warn(c, "Nenhum usuário logado", "Faça login para testar funcionalidades que exigem Auth");
+
+      if (user) {
+        const perfil = await perfilDoUsuario(user.uid);
+        perfil
+          ? ok(c, "Perfil Firestore encontrado", `papel: ${perfil.papel} | aprovado: ${perfil.aprovado}`)
+          : fail(c, "Perfil Firestore", "Documento usuarios/" + user.uid + " NÃO existe — rode o script de correção");
+      }
+    }
+
+    async function testeNorm(c) {
+      const casos = [
+        { fn: () => norm.cpf("111.222.333-44") === "11122233344", desc: "norm.cpf remove pontuação" },
+        { fn: () => norm.cpf("11122233344") === "11122233344",    desc: "norm.cpf já limpo" },
+        { fn: () => norm.fone("+5511999990000") === "11999990000", desc: "norm.fone remove +55" },
+        { fn: () => norm.fone("(19) 99999-0000") === "19999990000", desc: "norm.fone remove formatação" },
+        { fn: () => norm.email("TESTE@GMAIL.COM ") === "teste@gmail.com", desc: "norm.email lowercase+trim" },
+        { fn: () => norm.nome("  João  Silva  ") === "João Silva", desc: "norm.nome colapsa espaços" },
+        { fn: () => formatCodigoAluno(1)    === "EBD-0001", desc: "formatCodigo(1) = EBD-0001" },
+        { fn: () => formatCodigoAluno(999)  === "EBD-0999", desc: "formatCodigo(999) = EBD-0999" },
+        { fn: () => formatCodigoAluno(1000) === "EBD-1000", desc: "formatCodigo(1000) = EBD-1000" },
+        { fn: () => idMatricula("EBD-0001","TURMA-HEB1") === "EBD-0001__TURMA-HEB1", desc: "idMatricula composto" },
+      ];
+      for (const { fn, desc } of casos) {
+        try { fn() ? ok(c, desc) : fail(c, desc, "valor inesperado"); }
+        catch (e) { fail(c, desc, e.message); }
+      }
+    }
+
+    async function testeValidarLinha(c) {
+      const casos = [
+        { linha: { nome: "João", email: "joao@ex.com", telefone: "", cpf: "" }, erros: 0, desc: "Linha válida" },
+        { linha: { nome: "",     email: "joao@ex.com", telefone: "", cpf: "" }, erros: 1, desc: "Nome vazio → erro" },
+        { linha: { nome: "João", email: "emailinvalido", telefone: "", cpf: "" }, erros: 1, desc: "Email inválido → erro" },
+        { linha: { nome: "João", email: "",             telefone: "", cpf: "" }, erros: 0, desc: "Email vazio é permitido" },
+      ];
+      for (const { linha, erros, desc } of casos) {
+        const e = validarLinha(linha);
+        e.length === erros
+          ? ok(c, desc, e.length ? `Erros: ${e.join(", ")}` : "")
+          : fail(c, desc, `Esperava ${erros} erro(s), got ${e.length}: ${e.join(", ")}`);
+      }
+    }
+
+    async function testeUrl(c) {
+      const url = urlMatriculaTurma("TURMA-HEB1");
+      url.includes("matricula.html") && url.includes("turma=TURMA-HEB1")
+        ? ok(c, "urlMatriculaTurma gera URL correta", url)
+        : fail(c, "urlMatriculaTurma", url);
+    }
+
+    async function testeFirestore(c) {
+      if (CONFIG_PENDENTE) { warn(c, "Firestore — pulado (Firebase não configurado)"); return; }
+
+      await testar(c, "listarAlunos() não lança exceção", async () => {
+        const r = await listarAlunos();
+        return `${r.length} aluno(s) no banco`;
+      });
+
+      await testar(c, "listarTurmas() não lança exceção", async () => {
+        const r = await listarTurmas();
+        return `${r.length} turma(s) no banco`;
+      });
+
+      await testar(c, "buscarAluno('NAO-EXISTE') retorna null", async () => {
+        const r = await buscarAluno("NAO-EXISTE");
+        if (r !== null) throw new Error(`Esperava null, got ${JSON.stringify(r)}`);
+        return "null corretamente";
+      });
+
+      await testar(c, "sessaoAbertaDaTurma('TURMA-INEXISTENTE') retorna null", async () => {
+        const r = await sessaoAbertaDaTurma("TURMA-INEXISTENTE");
+        return r === null ? "null corretamente" : `ATENÇÃO: retornou ${JSON.stringify(r)}`;
+      });
+
+      // Testa geração de código sequencial de turma (leitura apenas)
+      await testar(c, "gerarProximoCodigoTurma preview (prefixo TEST)", async () => {
+        const r = await gerarProximoCodigoTurma("TEST");
+        if (!/^TEST-\d{3}$/.test(r)) throw new Error(`Formato inválido: ${r}`);
+        return `Próximo seria: ${r}`;
+      });
+    }
+
+    async function testeAuth(c) {
+      if (CONFIG_PENDENTE) { warn(c, "Auth — pulado (Firebase não configurado)"); return; }
+      const user = auth.currentUser;
+      if (!user) { warn(c, "Auth — pulado (não logado)"); return; }
+
+      await testar(c, "perfilDoUsuario retorna objeto válido", async () => {
+        const p = await perfilDoUsuario(user.uid);
+        if (!p) throw new Error("Perfil null — documento não existe em usuarios/");
+        if (!p.papel) throw new Error("Campo 'papel' ausente");
+        if (typeof p.aprovado !== "boolean") throw new Error("Campo 'aprovado' não é boolean");
+        return `papel=${p.papel}, aprovado=${p.aprovado}`;
+      });
+    }
+
+    async function testeFrequencia(c) {
+      if (CONFIG_PENDENTE) { warn(c, "Frequência — pulado"); return; }
+      await testar(c, "historicoFrequencia('EBD-XXXX') aceita código inexistente", async () => {
+        const r = await historicoFrequencia("EBD-9999");
+        if (!Array.isArray(r)) throw new Error("Esperava array");
+        return `${r.length} matrículas para EBD-9999`;
+      });
+    }
+
+    async function testeUI(c) {
+      const seletores = [
+        ["#form-login",     "index.html",   "Formulário de login"],
+        ["#form-cadastro",  "index.html",   "Formulário de cadastro"],
+        ["#painel-alunos",  "admin.html",   "Painel de alunos"],
+        ["#form-aluno",     "admin.html",   "Form cadastro aluno"],
+        ["#form-turma",     "admin.html",   "Form criação turma"],
+        ["#tu-prefixo",     "admin.html",   "Campo prefixo turma"],
+        ["#dropzone",       "admin.html",   "Dropzone importação"],
+        ["#sel-turma",      "professor.html","Select turma professor"],
+        ["#btn-abrir",      "professor.html","Botão abrir chamada"],
+        ["#lista-chamada",  "professor.html","Tabela de chamada"],
+        ["#passo-cpf",      "matricula.html","Passo CPF matrícula"],
+        ["#form-busca",     "area.html",    "Busca área do aluno"],
+        ["#grafico-freq",   "dashboard.html","Canvas gráfico"],
+        ["#lista-alertas",  "dashboard.html","Lista alertas evasão"],
+      ];
+      const paginaAtual = location.pathname.split("/").pop();
+      let checados = 0;
+      for (const [sel, pagina, desc] of seletores) {
+        if (pagina !== paginaAtual) continue;
+        const el = document.querySelector(sel);
+        el ? ok(c, `${desc} [${sel}]`) : fail(c, `${desc} [${sel}]`, `Elemento não encontrado na página`);
+        checados++;
+      }
+      if (checados === 0) info(c, "Seletores de UI", "Esta página é teste.html — abra em admin.html ou professor.html para checar UI específica");
+
+      // Checks gerais que valem em qualquer página
+      document.querySelector(".topo") ? ok(c, "Cabeçalho .topo presente") : fail(c, "Cabeçalho ausente");
+      document.querySelector(".logo-header") ? ok(c, "Logo no cabeçalho") : warn(c, "Logo não encontrado (img/logo-header.png)");
+      document.querySelector("link[href*='main.css']") ? ok(c, "main.css carregado") : fail(c, "main.css não encontrado");
+    }
+
+    async function testeConsistencia(c) {
+      // Verifica se variáveis CSS estão carregadas
+      const style = getComputedStyle(document.documentElement);
+      const vars = ["--indigo","--ambar","--verde","--papel","--tinta","--raio","--fonte-ui"];
+      for (const v of vars) {
+        const val = style.getPropertyValue(v).trim();
+        val ? ok(c, `CSS var ${v}`, val) : fail(c, `CSS var ${v} não definida`);
+      }
+
+      // Verifica SDK Firebase via import
+      try {
+        const { getFirestore } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+        ok(c, "SDK Firestore 10.12.2 acessível via CDN");
+      } catch { fail(c, "SDK Firestore CDN inacessível"); }
+
+      try {
+        const { getAuth } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+        ok(c, "SDK Auth 10.12.2 acessível via CDN");
+      } catch { fail(c, "SDK Auth CDN inacessível"); }
+    }
+
+    // ── RUNNER ─────────────────────────────────────────────────────────────────
+    document.getElementById("btn-rodar").addEventListener("click", async () => {
+      suites.innerHTML = "";
+      totalOk = 0; totalFail = 0; totalWarn = 0;
+      resumoEl.className = "info";
+      resumoEl.innerHTML = '<span class="spinner"></span> Rodando testes…';
+
+      const grupos = [
+        ["🔧 Configuração e Conexão Firebase",  testeConfig],
+        ["📐 Funções de Normalização e Formato", testeNorm],
+        ["📋 Validação de Linhas (Importador)",  testeValidarLinha],
+        ["🔗 Geração de URLs (QR Code)",         testeUrl],
+        ["🗄️ Leitura do Firestore",              testeFirestore],
+        ["🔐 Autenticação e Perfil",             testeAuth],
+        ["📊 Histórico de Frequência",           testeFrequencia],
+        ["🖥️ Elementos de Interface (UI)",       testeUI],
+        ["🎨 Consistência CSS e CDN",            testeConsistencia],
+      ];
+
+      for (const [titulo, fn] of grupos) {
+        const c = criarSuite(titulo);
+        try { await fn(c); }
+        catch (e) { fail(c, `Erro inesperado na suite`, e.message); }
+      }
+
+      const total = totalOk + totalFail + totalWarn;
+      if (totalFail === 0 && totalWarn === 0) {
+        resumoEl.className = "ok";
+        resumoEl.textContent = `✓ Todos os ${total} testes passaram!`;
+      } else if (totalFail === 0) {
+        resumoEl.className = "warn";
+        resumoEl.textContent = `⚠ ${totalOk} OK · ${totalWarn} avisos · ${total} total`;
+      } else {
+        resumoEl.className = "fail";
+        resumoEl.textContent = `✗ ${totalFail} falha(s) · ${totalOk} OK · ${totalWarn} aviso(s) · ${total} total`;
+      }
+    });
+  </script>
+</body>
+</html>
