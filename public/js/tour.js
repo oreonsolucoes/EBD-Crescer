@@ -4,8 +4,7 @@
 // -----------------------------------------------------------------------------
 
 async function carregarDriver() {
-  if (window.driver) return window.driver;
-  // CSS do Driver.js
+  if (window.driver?.js?.driver) return window.driver.js;
   if (!document.getElementById("driver-css")) {
     const link = document.createElement("link");
     link.id = "driver-css";
@@ -13,19 +12,24 @@ async function carregarDriver() {
     link.href = "https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.css";
     document.head.appendChild(link);
   }
-  // JS do Driver.js
   await new Promise((resolve, reject) => {
     const s = document.createElement("script");
     s.src = "https://cdn.jsdelivr.net/npm/driver.js@1.3.1/dist/driver.js.iife.js";
     s.onload = resolve; s.onerror = reject;
     document.head.appendChild(s);
   });
-  return window.driver;
+  // Driver.js v1.x expõe window.driver.js.driver
+  return window.driver?.js || window.driver;
 }
 
-// Inicia um tour. `passos` = array de objetos do Driver.js
 async function iniciarTour(chave, passos, opcoes = {}) {
-  const { driver: driverFn } = await carregarDriver();
+  const lib = await carregarDriver();
+  // Suporta tanto driver.js.driver() quanto driver() dependendo da versão
+  const driverFn = lib?.driver || lib;
+  if (typeof driverFn !== "function") {
+    console.warn("Driver.js não carregou corretamente.");
+    return;
+  }
   const d = driverFn({
     animate: true,
     smoothScroll: true,
