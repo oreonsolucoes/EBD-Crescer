@@ -321,3 +321,29 @@
   </script>
 </body>
 </html>
+
+<script type="module">
+// Adiciona seção de testes de UI com links para cada página
+const suites = document.getElementById("suites");
+const sec = document.createElement("div");
+sec.className = "suite cartao";
+sec.innerHTML = `
+  <h2>🖱️ Testes de Botões e Transições (por página)</h2>
+  <p class="dica">Clique no link da página para abrir com o painel de testes ativado automaticamente.</p>
+  <div class="acoes" style="flex-wrap:wrap;gap:10px;margin-top:10px">
+    ${["index.html","admin.html","professor.html","matricula.html?turma=TESTE",
+       "area.html","dashboard.html"].map(p => `
+      <a href="./${p}${p.includes("?")?"&":"?"}teste=1"
+         class="btn btn-secundario" target="_blank"
+         style="font-size:.85rem">
+        Abrir ${p.split("?")[0]} com testes
+      </a>`).join("")}
+  </div>
+  <div class="aviso" style="margin-top:14px">
+    <strong>Como funciona:</strong> cada link abre a página com <code>?teste=1</code> na URL.
+    Um painel aparece na parte inferior da tela com os resultados dos testes de clique,
+    transição entre abas, visibilidade dos elementos e comportamento dos botões.
+  </div>
+`;
+suites.appendChild(sec);
+</script>
