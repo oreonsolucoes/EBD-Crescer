@@ -55,7 +55,7 @@ if (CONFIG_PENDENTE) {
 
 // ---------- Navegação por abas ----------
 $$(".aba").forEach((aba) => {
-  aba.addEventListener("click", () => {
+  aba.addEventListener("click", async () => {
     $$(".aba").forEach((a) => a.setAttribute("aria-selected", "false"));
     $$(".painel").forEach((p) => (p.hidden = true));
     aba.setAttribute("aria-selected", "true");
