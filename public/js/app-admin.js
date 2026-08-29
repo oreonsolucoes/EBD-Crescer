@@ -4,11 +4,11 @@
 
 import { CONFIG_PENDENTE } from "./firebase-config.js";
 import {
-  criarAluno, listarAlunos,
+  criarAluno, listarAlunos, buscarAluno, editarAluno, excluirAluno,
   criarProfessor, listarProfessores,
-  criarTurma, listarTurmas, gerarProximoCodigoTurma,
-  criarMatricula, listarMatriculas,
-  buscarAluno,
+  criarTurma, criarTurmaComPrazo, listarTurmas, gerarProximoCodigoTurma,
+  encerrarTurmasVencidas, calcularAulas,
+  criarMatricula, listarMatriculas, trancarMatricula, reativarMatricula, excluirMatricula,
 } from "./db.js";
 import {
   lerArquivo, preVisualizar, confirmarImportacao, baixarModeloCSV,
@@ -65,6 +65,59 @@ if (CONFIG_PENDENTE) {
   $(".container").prepend(av);
 }
 
+// Encerra turmas vencidas automaticamente ao abrir o painel
+encerrarTurmasVencidas().then(enc => {
+  if (enc.length) toast(`${enc.length} turma(s) encerrada(s) automaticamente: ${enc.join(", ")}`);
+});
+
+// ── Modal de edição de aluno ──────────────────────────────────────────────────
+document.body.insertAdjacentHTML("beforeend", `
+<div id="modal-editar-aluno" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);
+     z-index:200;align-items:center;justify-content:center;padding:20px">
+  <div style="background:var(--papel-alto);border-radius:var(--raio);padding:24px;
+              max-width:500px;width:100%;box-shadow:var(--sombra);position:relative">
+    <button id="modal-fechar" style="position:absolute;top:12px;right:12px;background:none;
+            border:none;cursor:pointer;font-size:1.2rem;color:var(--tinta-2)">✕</button>
+    <h2 id="modal-titulo" style="margin-bottom:16px">Editar aluno</h2>
+    <input type="hidden" id="modal-codigo">
+    <div class="grade duas">
+      <div><label>Nome</label><input id="modal-nome" /></div>
+      <div><label>Telefone</label><input id="modal-telefone" inputmode="tel" /></div>
+      <div><label>E-mail</label><input id="modal-email" type="email" /></div>
+      <div><label>CPF</label><input id="modal-cpf" inputmode="numeric" /></div>
+    </div>
+    <div class="acoes" style="margin-top:14px">
+      <button id="modal-salvar" class="btn btn-primario">Salvar alterações</button>
+      <button id="modal-cancelar" class="btn btn-secundario">Cancelar</button>
+    </div>
+  </div>
+</div>`);
+
+function abrirModalEditar(aluno) {
+  $("#modal-codigo").value   = aluno.codigo;
+  $("#modal-nome").value     = aluno.nome;
+  $("#modal-telefone").value = aluno.telefone || "";
+  $("#modal-email").value    = aluno.email || "";
+  $("#modal-cpf").value      = aluno.cpf || "";
+  $("#modal-titulo").textContent = `Editar — ${aluno.codigo}`;
+  $("#modal-editar-aluno").style.display = "flex";
+}
+const fecharModal = () => { $("#modal-editar-aluno").style.display = "none"; };
+$("#modal-fechar").addEventListener("click", fecharModal);
+$("#modal-cancelar").addEventListener("click", fecharModal);
+$("#modal-editar-aluno").addEventListener("click", (e) => { if (e.target === e.currentTarget) fecharModal(); });
+$("#modal-salvar").addEventListener("click", async () => {
+  const btn = $("#modal-salvar"); btn.disabled = true;
+  try {
+    await editarAluno($("#modal-codigo").value, {
+      nome: $("#modal-nome").value, telefone: $("#modal-telefone").value,
+      email: $("#modal-email").value, cpf: $("#modal-cpf").value,
+    });
+    toast("Aluno atualizado."); fecharModal(); renderAlunos();
+  } catch (err) { toast("Erro: " + err.message, "err"); }
+  finally { btn.disabled = false; }
+});
+
 // ---------- Navegação por abas ----------
 $$(".aba").forEach((aba) => {
   aba.addEventListener("click", async () => {
@@ -119,7 +172,7 @@ async function renderAlunos() {
     if (!alunos.length) { alvo.innerHTML = '<p class="vazio">Nenhum aluno cadastrado ainda.</p>'; return; }
     alvo.innerHTML = `
       <div class="tabela-wrap"><table>
-        <thead><tr><th>Código</th><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Status</th><th>Cartão</th></tr></thead>
+        <thead><tr><th>Código</th><th>Nome</th><th>Telefone</th><th>E-mail</th><th>Status</th><th>Cartão</th><th>Ações</th></tr></thead>
         <tbody>${alunos.map((a) => `
           <tr>
             <td class="mono">${esc(a.codigo)}</td>
@@ -128,8 +181,26 @@ async function renderAlunos() {
             <td>${esc(a.email)}</td>
             <td><span class="tag ativo">${esc(a.status)}</span></td>
             <td><a href="cartao.html?codigo=${esc(a.codigo)}" class="btn btn-secundario" style="padding:4px 10px;font-size:.78rem" target="_blank">Cartão</a></td>
+            <td style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-secundario btn-editar-aluno" data-codigo="${esc(a.codigo)}"
+                style="padding:4px 10px;font-size:.78rem">✏️ Editar</button>
+              <button class="btn btn-secundario btn-excluir-aluno" data-codigo="${esc(a.codigo)}" data-nome="${esc(a.nome)}"
+                style="padding:4px 10px;font-size:.78rem;color:var(--erro);border-color:var(--erro)">🗑 Excluir</button>
+            </td>
           </tr>`).join("")}</tbody>
       </table></div>`;
+
+    // Liga botões
+    $$(".btn-editar-aluno").forEach(btn => btn.addEventListener("click", async () => {
+      const a = await buscarAluno(btn.dataset.codigo);
+      if (a) abrirModalEditar(a);
+    }));
+    $$(".btn-excluir-aluno").forEach(btn => btn.addEventListener("click", async () => {
+      if (!confirm(`Excluir permanentemente ${btn.dataset.nome} (${btn.dataset.codigo})?\nIsso apaga todas as matrículas e presenças deste aluno.`)) return;
+      btn.disabled = true;
+      try { await excluirAluno(btn.dataset.codigo); toast("Aluno excluído."); renderAlunos(); }
+      catch (err) { toast("Erro: " + err.message, "err"); btn.disabled = false; }
+    }));
   } catch (err) {
     alvo.innerHTML = `<p class="vazio">Erro ao carregar: ${esc(err.message)}</p>`;
   }
@@ -192,6 +263,24 @@ $("#tu-prefixo")?.addEventListener("input", async (e) => {
   } catch { preview.textContent = ""; }
 });
 
+// Preview de datas da turma
+function atualizarPreviewDatas() {
+  const inicio = $("#tu-data-inicio")?.value;
+  const semanas = parseInt($("#tu-semanas")?.value);
+  const dia = parseInt($("#tu-dia-semana")?.value);
+  const preview = $("#tu-preview-datas");
+  if (!preview) return;
+  if (!inicio || !semanas || isNaN(dia)) { preview.textContent = ""; return; }
+  try {
+    const aulas = calcularAulas(inicio, semanas, dia);
+    preview.textContent = `${aulas.length} aulas: ${aulas[0]} → ${aulas[aulas.length - 1]}`;
+    preview.style.color = "var(--verde)";
+  } catch { preview.textContent = ""; }
+}
+$("#tu-data-inicio")?.addEventListener("change", atualizarPreviewDatas);
+$("#tu-semanas")?.addEventListener("input", atualizarPreviewDatas);
+$("#tu-dia-semana")?.addEventListener("change", atualizarPreviewDatas);
+
 $("#form-turma").addEventListener("submit", async (e) => {
   e.preventDefault();
   const btn = $("#form-turma button[type=submit]");
@@ -199,15 +288,22 @@ $("#form-turma").addEventListener("submit", async (e) => {
   try {
     const prefixo = $("#tu-prefixo")?.value?.trim();
     const codManual = $("#tu-codigo")?.value?.trim();
-    const id = await criarTurma({
+    const dataInicio = $("#tu-data-inicio").value;
+    const semanas = parseInt($("#tu-semanas").value) || 0;
+    const diaSemana = parseInt($("#tu-dia-semana").value);
+    if (!dataInicio) throw new Error("Informe a data de início.");
+    if (!semanas || semanas < 1) throw new Error("Informe o número de semanas.");
+    const r = await criarTurmaComPrazo({
       prefixo: prefixo || "",
       codigo: codManual || "",
       nome: $("#tu-nome").value,
       professorCodigo: $("#tu-professor").value,
-      dia: $("#tu-dia").value,
+      diaSemana,
+      dataInicio,
+      semanas,
       horario: $("#tu-horario").value,
     });
-    toast(`Turma criada: ${id}`);
+    toast(`Turma criada: ${r.id} · ${r.totalAulasPrevistas} aulas até ${r.dataFim}`);
     e.target.reset();
     if ($("#tu-codigo-preview")) $("#tu-codigo-preview").textContent = "";
     renderTurmas();
@@ -224,10 +320,18 @@ async function renderTurmas() {
     if (!turmas.length) { alvo.innerHTML = '<p class="vazio">Nenhuma turma criada.</p>'; return; }
     alvo.innerHTML = `
       <div class="tabela-wrap"><table>
-        <thead><tr><th>Código</th><th>Nome</th><th>Professor</th><th>Dia</th><th>Horário</th></tr></thead>
+        <thead><tr><th>Código</th><th>Nome</th><th>Professor</th><th>Dia/Horário</th><th>Prazo</th><th>Aulas</th><th>Status</th></tr></thead>
         <tbody>${turmas.map((t) => `
-          <tr><td class="mono">${esc(t.codigo)}</td><td>${esc(t.nome)}</td>
-          <td>${esc(t.professorCodigo) || "—"}</td><td>${esc(t.dia)}</td><td>${esc(t.horario)}</td></tr>`).join("")}</tbody>
+          <tr>
+            <td class="mono">${esc(t.codigo)}</td>
+            <td>${esc(t.nome)}</td>
+            <td>${esc(t.professorCodigo) || "—"}</td>
+            <td>${esc(t.horario) || "—"}</td>
+            <td style="font-size:.8rem">${t.dataInicio ? `${t.dataInicio} → ${t.dataFim}` : "—"}</td>
+            <td style="text-align:center">${t.totalAulasPrevistas || "—"}</td>
+            <td><span class="tag ${t.status === "ativa" ? "ativo" : "jacad"}">${esc(t.status)}</span></td>
+          </tr>`).join("")}
+        </tbody>
       </table></div>`;
   } catch (err) { alvo.innerHTML = `<p class="vazio">Erro: ${esc(err.message)}</p>`; }
 }
@@ -267,13 +371,45 @@ async function renderMatriculas() {
     if (!mats.length) { alvo.innerHTML = '<p class="vazio">Nenhuma matrícula.</p>'; return; }
     alvo.innerHTML = `
       <div class="tabela-wrap"><table>
-        <thead><tr><th>Aluno</th><th>Nome</th><th>Turma</th><th>Status</th></tr></thead>
+        <thead><tr><th>Aluno</th><th>Nome</th><th>Turma</th><th>Status</th><th>Ações</th></tr></thead>
         <tbody>${mats.map((m) => `
-          <tr><td class="mono">${esc(m.alunoCodigo)}</td>
-          <td>${esc(nomePorCodigo.get(m.alunoCodigo) || "—")}</td>
-          <td class="mono">${esc(m.turmaCodigo)}</td>
-          <td><span class="tag ativo">${esc(m.status)}</span></td></tr>`).join("")}</tbody>
+          <tr>
+            <td class="mono">${esc(m.alunoCodigo)}</td>
+            <td>${esc(nomePorCodigo.get(m.alunoCodigo) || "—")}</td>
+            <td class="mono">${esc(m.turmaCodigo)}</td>
+            <td><span class="tag ${m.status === "ativa" ? "ativo" : "jacad"}">${esc(m.status)}</span></td>
+            <td style="display:flex;gap:6px;flex-wrap:wrap">
+              ${m.status === "ativa"
+                ? `<button class="btn btn-secundario btn-trancar-mat"
+                    data-aluno="${esc(m.alunoCodigo)}" data-turma="${esc(m.turmaCodigo)}"
+                    style="padding:4px 10px;font-size:.78rem">⏸ Trancar</button>`
+                : `<button class="btn btn-secundario btn-reativar-mat"
+                    data-aluno="${esc(m.alunoCodigo)}" data-turma="${esc(m.turmaCodigo)}"
+                    style="padding:4px 10px;font-size:.78rem;color:var(--verde);border-color:var(--verde)">▶ Reativar</button>`}
+              <button class="btn btn-secundario btn-excluir-mat"
+                data-aluno="${esc(m.alunoCodigo)}" data-turma="${esc(m.turmaCodigo)}"
+                style="padding:4px 10px;font-size:.78rem;color:var(--erro);border-color:var(--erro)">🗑 Excluir</button>
+            </td>
+          </tr>`).join("")}
+        </tbody>
       </table></div>`;
+
+    $$(".btn-trancar-mat").forEach(btn => btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      try { await trancarMatricula(btn.dataset.aluno, btn.dataset.turma); toast("Matrícula trancada."); renderMatriculas(); }
+      catch (err) { toast("Erro: " + err.message, "err"); btn.disabled = false; }
+    }));
+    $$(".btn-reativar-mat").forEach(btn => btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      try { await reativarMatricula(btn.dataset.aluno, btn.dataset.turma); toast("Matrícula reativada."); renderMatriculas(); }
+      catch (err) { toast("Erro: " + err.message, "err"); btn.disabled = false; }
+    }));
+    $$(".btn-excluir-mat").forEach(btn => btn.addEventListener("click", async () => {
+      if (!confirm(`Excluir permanentemente matrícula de ${btn.dataset.aluno} em ${btn.dataset.turma}?\nIsso apaga as presenças nessa turma.`)) return;
+      btn.disabled = true;
+      try { await excluirMatricula(btn.dataset.aluno, btn.dataset.turma); toast("Matrícula excluída."); renderMatriculas(); }
+      catch (err) { toast("Erro: " + err.message, "err"); btn.disabled = false; }
+    }));
   } catch (err) { alvo.innerHTML = `<p class="vazio">Erro: ${esc(err.message)}</p>`; }
 }
 
