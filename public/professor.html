@@ -12,7 +12,8 @@
 <body>
   <header class="topo">
     <div class="barra">
-      <div class="selo">EBD</div>
+      <img src="./img/logo-header.png" alt="Crescer - Educação Cristã" class="logo-header"
+           onerror="this.outerHTML='<div class=\'selo\'>EBD</div>'">
       <div>
         <div class="titulo">Painel do Professor</div>
         <div class="sub" id="ola-professor">…</div>
@@ -30,28 +31,28 @@
         <div id="estado-chamada"></div>
       </div>
       <div class="acoes" style="margin-top:14px">
-        <button id="btn-abrir" class="btn btn-primario">Abrir chamada</button>
+        <button id="btn-abrir"    class="btn btn-primario">Abrir chamada</button>
         <button id="btn-encerrar" class="btn btn-secundario" hidden>Encerrar chamada</button>
-        <button id="btn-baixar-qr" class="btn btn-secundario">Baixar QR da turma</button>
+        <button id="btn-baixar-qr" class="btn btn-secundario">⬇️ Baixar QR da turma</button>
       </div>
-    </div>
-
-    <div class="cartao" style="text-align:center">
-      <h2>QR Code de matrícula da turma</h2>
-      <p class="dica">Este QR é <strong>fixo</strong>: imprima e cole na sala. Os alunos leem para se <strong>matricular</strong> na turma (a qualquer momento). A presença é você quem marca abaixo.</p>
-      <canvas id="qr-canvas" width="220" height="220" style="max-width:100%"></canvas>
-      <p class="dica mono" id="qr-url" style="word-break:break-all;margin-top:8px"></p>
+      <p class="dica" style="margin-top:8px">
+        O QR Code é fixo por turma — imprima e cole na sala para que os alunos se matriculem.
+      </p>
     </div>
 
     <div class="cartao">
       <h2>Chamada de hoje <span class="contagem" id="contador">0 / 0</span></h2>
       <p class="dica">Abra a chamada e toque em cada aluno para marcar <strong>Presente</strong>. Todos começam como ausentes.</p>
       <div class="acoes" style="margin-bottom:10px">
-        <button id="btn-atualizar" class="btn btn-secundario" style="padding:6px 12px;font-size:.85rem">Atualizar lista de matriculados</button>
+        <button id="btn-atualizar" class="btn btn-secundario" style="padding:6px 12px;font-size:.85rem">
+          Atualizar lista de matriculados
+        </button>
       </div>
       <div class="tabela-wrap"><table>
         <thead><tr><th>Código</th><th>Nome</th><th style="text-align:center">Presença</th></tr></thead>
-        <tbody id="lista-chamada"><tr><td colspan="3" class="vazio">Selecione uma turma.</td></tr></tbody>
+        <tbody id="lista-chamada">
+          <tr><td colspan="3" class="vazio">Selecione uma turma.</td></tr>
+        </tbody>
       </table></div>
     </div>
   </div>
