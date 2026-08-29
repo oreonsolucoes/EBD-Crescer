@@ -17,6 +17,7 @@ import {
   protegerPagina, sair,
   listarUsuarios, listarPendentes, aprovarUsuario, revogarUsuario, vincularProfessor,
 } from "./auth.js";
+import { tourAdmin, resetarTour } from "./tour.js";
 
 // Protege a página: só coordenador entra. Bloqueia o render até validar sessão.
 const { perfil: perfilAdmin } = await protegerPagina(["coordenador"]);
@@ -24,6 +25,19 @@ const elOla = document.querySelector("#ola-coordenador");
 if (elOla) elOla.textContent = perfilAdmin.nome || perfilAdmin.email;
 const btnSair = document.querySelector("#btn-sair");
 if (btnSair) btnSair.addEventListener("click", async () => { await sair(); location.href = "index.html"; });
+
+// Tour guiado — inicia na primeira visita
+setTimeout(() => tourAdmin(), 800);
+
+// Botão "Ver tour" no cabeçalho
+document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.createElement("button");
+  btn.className = "btn btn-secundario";
+  btn.style.cssText = "padding:5px 10px;font-size:.78rem;margin-left:8px";
+  btn.textContent = "Ver tour";
+  btn.addEventListener("click", () => { resetarTour("tour-admin-v1"); tourAdmin(true); });
+  document.querySelector(".topo .barra")?.appendChild(btn);
+});
 
 // ---------- utilidades de UI ----------
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
