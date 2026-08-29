@@ -21,12 +21,14 @@
   --r: 12px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
 body {
   font-family: 'Inter', sans-serif;
   background: var(--papel);
   color: var(--azul);
   line-height: 1.6;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 /* ── HEADER ─────────────────────────────────────────────── */
@@ -34,11 +36,12 @@ body {
   background: var(--azul);
   border-bottom: 4px solid var(--ambar);
   position: sticky; top: 0; z-index: 100;
+  width: 100%; overflow: hidden;
 }
 .site-header .inner {
   max-width: 960px; margin: 0 auto;
-  padding: 14px 20px;
-  display: flex; align-items: center; gap: 16px;
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
 }
 .site-header .logo-text {
   font-size: 1.3rem; font-weight: 800;
@@ -58,7 +61,7 @@ body {
 .layout {
   max-width: 960px; margin: 0 auto;
   display: grid; grid-template-columns: 220px 1fr;
-  gap: 0; min-height: 100vh;
+  gap: 0; min-height: 100vh; width: 100%;
 }
 @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } }
 
@@ -87,8 +90,8 @@ body {
 .sidenav .nav-icon { font-size: 1rem; width: 22px; text-align: center; }
 
 /* ── CONTEÚDO ────────────────────────────────────────────── */
-.content { padding: 32px 28px; }
-@media (max-width: 700px) { .content { padding: 20px 16px; } }
+.content { padding: 16px 14px; }
+@media (min-width: 700px) { .content { padding: 28px 24px; } }
 
 /* Seções */
 .section { margin-bottom: 56px; scroll-margin-top: 80px; }
@@ -112,14 +115,15 @@ h2.section-title {
 /* ── HERO ────────────────────────────────────────────────── */
 .hero {
   background: linear-gradient(135deg, var(--azul) 0%, var(--azul2) 100%);
-  border-radius: var(--r); padding: 40px 32px; margin-bottom: 40px;
+  border-radius: var(--r); padding: 28px 20px; margin-bottom: 40px;
   color: #fff; position: relative; overflow: hidden;
+  width: 100%; box-sizing: border-box;
 }
 .hero::before {
   content: ""; position: absolute; inset: 0;
   background: repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(255,255,255,.02) 40px,rgba(255,255,255,.02) 80px);
 }
-.hero .inner { position: relative; }
+.hero .inner { position: relative; width: 100%; max-width: 100%; }
 .hero .tag {
   background: var(--ambar); color: var(--azul);
   font-size: .72rem; font-weight: 700; padding: 3px 10px;
@@ -129,14 +133,18 @@ h2.section-title {
 .hero p  { color: rgba(255,255,255,.75); max-width: 520px; margin-bottom: 20px; }
 .hero .url {
   background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
-  border-radius: 8px; padding: 10px 16px;
-  font-family: 'IBM Plex Mono', monospace; font-size: .9rem;
-  display: inline-block; color: var(--ambar2);
+  border-radius: 8px; padding: 8px 12px;
+  font-family: 'IBM Plex Mono', monospace; font-size: .78rem;
+  display: block; color: var(--ambar2);
+  word-break: break-all; max-width: 100%;
 }
 .perfis {
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 16px;
 }
-@media (max-width: 500px) { .perfis { grid-template-columns: 1fr; } }
+@media (min-width: 560px) { .perfis { grid-template-columns: repeat(3, 1fr); } }
 .perfil-card {
   background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.12);
   border-radius: 10px; padding: 14px;
@@ -385,6 +393,23 @@ footer {
     .content { padding: 16px 12px; }
     h2.section-title { font-size: 1.3rem; }
   }
+
+  /* ── MOCK FRAME MOBILE FIX ───────────────────────────────── */
+  .mock-frame { max-width: 100%; overflow: hidden; }
+  .mock-body  { overflow-x: auto; }
+  .sim-abas   { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .sim-lista  { overflow-x: auto; }
+  .sim-row    { min-width: 0; }
+  .sim-cod    { min-width: 0; flex: none; }
+  /* perfil-card sem min-width */
+  .perfil-card { min-width: 0; }
+  /* indice responsivo */
+  .indice { grid-template-columns: repeat(2, 1fr); }
+  @media (min-width: 560px) { .indice { grid-template-columns: repeat(3, 1fr); } }
+  @media (min-width: 760px) { .indice { grid-template-columns: repeat(4, 1fr); } }
+  /* section-desc no mobile */
+  .section-desc { max-width: 100%; }
+
 </style>
 </head>
 <body>
