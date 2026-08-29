@@ -67,7 +67,11 @@ function atualizarEstadoSessao(sessao) {
     : '<span class="tag jacad">Chamada fechada</span>';
 
   if (unsubPresencas) { unsubPresencas(); unsubPresencas = null; }
+
   if (aberta) {
+    // Renderiza imediatamente com sessão aberta (botões habilitados)
+    // antes mesmo de receber as presenças do Firestore
+    renderLista();
     unsubPresencas = ouvirPresencas(sessao.sessaoCodigo, (presentes) => {
       presentesSet = new Set(presentes.map((p) => p.alunoCodigo));
       renderLista();
